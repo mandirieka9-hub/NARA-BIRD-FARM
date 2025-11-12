@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel Penangkaran Burung</title>
+<style>
+/* --- TAMPILAN DEFAULT (DESKTOP) --- */
+body { margin:0; font-family: Arial, sans-serif; display:flex; height:100vh; transition: background 0.3s; }
+aside {
+    width:250px;
+    background:#2c3e50;
+    color:white;
+    display:flex;
+    flex-direction:column;
+    padding:20px;
+    box-sizing:border-box;
+    transition: background 0.3s;
+    text-align: center; 
+    align-items: center; 
+    height: 100vh; /* Tinggi penuh di desktop */
+}
+.header-hp { display: block; width: 100%; text-align: center; }
+.menu-hp { display: block; width: 100%; }
+aside img { 
+    max-width:100px; 
+    margin: 0 auto 10px auto; 
+    border-radius:10px; 
+}
+aside h2 { 
+    font-size:18px; 
+    margin:5px 0; 
+    border-top: 1px solid rgba(255,255,255,0.2); 
+    padding-top: 10px; 
+    width: 100%; 
+}
+aside p { font-size:14px; margin-bottom:20px; color:#ecf0f1; }
+aside button {
+    background:#34495e;
+    border:none;
+    color:white;
+    text-align:left;
+    padding:10px;
+    cursor:pointer;
+    width:100%;
+    font-size:16px;
+    border-radius:8px;
+    margin-bottom:8px;
+    transition: all 0.3s;
+}
+aside button:hover { background:#1abc9c; transform:scale(1.03); box-shadow:0 2px 6px rgba(0,0,0,0.3);}
+aside button.active { background:#16a085; box-shadow:inset 0 0 5px rgba(0,0,0,0.2); }
+aside #logoutBtn {
+    background: #e74c3c; 
+    margin-top: auto;
+    margin-bottom: 0;
+}
+aside #logoutBtn:hover {
+    background: #c0392b;
+    transform: none;
+    box-shadow: none;
+}
+
+main { flex:1; padding:20px; overflow-y:auto; transition: background 0.3s; }
+form { background:white; padding:20px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); margin-bottom:20px; }
+form label { display:block; margin-bottom:5px; font-weight:bold; }
+form input[type=text], form input[type=color], form input[type=file], form textarea, form select,
+form input[type=email], form input[type=password], .search-container input { 
+    width:100%; padding:8px; margin-bottom:15px; box-sizing:border-box; border-radius:5px; border:1px solid #ccc; 
+}
+form button { padding:8px 12px; cursor:pointer; border:none; border-radius:5px; background:#2c3e50; color:white; transition: background 0.3s;}
+form button:hover { background:#16a085; }
+table { width:100%; border-collapse: collapse; background:white; border-radius:10px; overflow:hidden; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+th, td { padding:10px; border-bottom:1px solid #ccc; text-align:left; }
+th { background:#34495e; color:white; }
+button.actionBtn { padding:5px 10px; margin-right:5px; border:none; border-radius:5px; cursor:pointer; background:#2c3e50; color:white; transition: all 0.3s; }
+button.actionBtn:hover { background:#16a085; transform:scale(1.05); }
+.search-container { margin-bottom:20px; display:flex; gap:10px; }
+.search-container input { flex-grow:1; }
+
+/* --- STYLE MODAL EDIT ELEGAN BARU --- */
+.modal {
+    display:none; 
+    position:fixed; 
+    z-index:1000; 
+    left:0; 
+    top:0;
+    width:100%; 
+    height:100%; 
+    overflow:auto; 
+    background:rgba(0,0,0,0.7); 
+    animation: fadeIn 0.3s;
+}
+.modal-content {
+    background:white; 
+    margin:5% auto; 
+    padding:30px; 
+    border-radius:12px; 
+    width:90%; 
+    max-width:450px; 
+    box-shadow:0 10px 25px rgba(0,0,0,0.3); 
+    position: relative;
+    animation: slideIn 0.3s ease-out;
+}
+.modal-content h3 {
+    color: #34495e;
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ecf0f1;
+    margin-bottom: 20px;
+    font-size: 22px;
+}
+.modal-content label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #34495e;
+    font-size: 14px;
+}
+.modal-content input[type=text], 
+.modal-content input[type=date], 
+.modal-content select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    transition: border-color 0.3s;
+}
+.modal-content input:focus, 
+.modal-content select:focus {
+    border-color: #1abc9c;
+    outline: none;
+    box-shadow: 0 0 5px rgba(26, 188, 156, 0.3);
+}
+.modal-actions {
+    display: flex;
+    justify-content: flex-end; 
+    gap: 10px;
+    margin-top: 20px;
+}
+.modal-actions button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+.modal-actions .saveBtn {
+    background: #1abc9c;
+    color: white;
+}
+.modal-actions .saveBtn:hover {
+    background: #16a085;
+}
+.modal-actions .cancelBtn {
+    background: #bdc3c7;
+    color: #34495e;
+}
+.modal-actions .cancelBtn:hover {
+    background: #95a5a6;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideIn { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* --- LOGIN SCREEN STYLES BARU --- */
+#loginScreen {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #ecf0f1; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+.login-box {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    width: 90%;
+    max-width: 350px;
+    text-align: center;
+}
+.login-box h3 {
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-size: 26px;
+    font-weight: 700;
+}
+.login-box input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+.login-box button {
+    width: 100%;
+    padding: 12px;
+    background: #1abc9c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s;
+    font-size: 16px;
+}
+.login-box button:hover {
+    background: #16a085;
+}
+.forgot-password {
+    margin-top: 15px;
+    font-size: 14px;
+    text-align: right;
+}
+.forgot-password a {
+    color: #34495e;
+    text-decoration: none;
+}
+.forgot-password a:hover {
+    color: #1abc9c;
+    text-decoration: underline;
+}
+
+/* --- MEDIA QUERY UNTUK HP (RESPONSIVE) --- */
+@media (max-width: 768px) {
+    /* PERBAIKAN KRITIS UNTUK MENGIZINKAN SCROLL */
+    body {
+        flex-direction: column; 
+        height: auto; 
+    }
+    #appContainer {
+        display: flex;
+        flex-direction: column; 
+        width: 100%;
+        height: auto;
+    }
+    
+    aside {
+        /* Sidebar/Header */
+        width: 100%; 
+        height: auto; /* INI PERBAIKAN PENTING: Menimpa height: 100vh dari desktop */
+        flex-direction: row; 
+        padding: 10px 20px;
+        flex-wrap: nowrap; 
+        justify-content: space-between; 
+        align-items: center; 
+        border-bottom: 2px solid #16a085;
+        position: sticky; /* Jaga agar header tetap di atas saat scroll */
+        top: 0;
+        z-index: 99;
+        flex-shrink: 0; 
+    }
+
+    .header-hp {
+        display: flex;
+        align-items: center;
+        width: auto; 
+        justify-content: flex-start;
+        flex-grow: 0.1; 
+    }
+    .menu-hp {
+        display: flex;
+        width: auto; 
+        justify-content: flex-end; 
+        flex-grow: 1; 
+        align-items: center;
+        margin: 0 10px; 
+    }
+    aside img {
+        max-width: 40px; 
+        margin: 0;
+    }
+    aside p {
+        margin: 0 0 0 10px; 
+        align-self: center; 
+        font-size: 12px;
+    }
+    aside h2 {
+        display: none; 
+    }
+    aside button {
+        /* Style untuk Info/Data button */
+        display: block; 
+        width: auto; 
+        flex-grow: 0;
+        margin: 0 0 0 5px; 
+        text-align: center;
+        padding: 8px 10px;
+        font-size: 11px;
+    }
+    aside #logoutBtn {
+        /* Tombol Logout */
+        width: auto;
+        flex-grow: unset;
+        margin-left: 10px;
+        margin-top: 0; 
+        margin-bottom: 0;
+    }
+    
+    main {
+        /* Konten Utama */
+        padding: 10px;
+        width: 100%; 
+        flex: 1; 
+        overflow-y: visible; 
+    }
+    .login-box { padding: 25px; }
+}
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+    <div class="login-box">
+        <h3>Login Admin Panel</h3>
+        <input type="text" id="loginUsername" placeholder="Username" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <button onclick="handleLogin()">Login</button>
+        <p id="loginMessage" style="color:#e74c3c; margin-top:10px; display:none; font-weight: bold;">Username atau password salah.</p>
+        <div class="forgot-password">
+            <a href="#" onclick="forgotPassword(event)">Lupa Sandi?</a>
+        </div>
+    </div>
+</div>
+
+<div id="appContainer" style="display:none; width: 100%;">
+
+    <aside>
+        <div class="header-hp"> 
+            <img id="sidebarLogo" src="" alt="Logo">
+            <p id="penangkaranName">Nama Penangkaran</p>
+        </div>
+        <h2>Menu</h2>
+        <div class="menu-hp">
+            <button onclick="showSection('info')" id="btnInfo">Info</button>
+            <button onclick="showSection('birds')" id="btnBirds">Data</button>
+        </div>
+        <button id="logoutBtn" onclick="handleLogout()">Logout</button>
+    </aside>
+
+    <main>
+        <section id="info">
+            <h2>Pengaturan Website</h2>
+            <form id="infoForm">
+                <h3>Pengaturan Akun Admin (Untuk Login)</h3>
+                <label>Username Admin:</label>
+                <input type="text" id="adminUsername" required>
+                <label>Password Admin (Baru):</label>
+                <input type="password" id="adminPassword" required>
+                <label>Email Admin (Untuk Fitur Lupa Sandi):</label>
+                <input type="email" id="adminEmail" required>
+
+                <h3>Pengaturan Tampilan</h3>
+                <label>Logo:</label>
+                <input type="file" id="logoInput" accept="image/*">
+                <img id="logoPreview" src="" style="max-width:120px; margin-bottom:15px; display:block; border-radius:8px;">
+				<label>Logo (URL, Alternatif):</label>
+				<input type="text" id="logoUrl" placeholder="Tempel URL logo dari Imgur atau lainnya">
+
+                
+                <label>Warna Background (Prioritas 3):</label>
+                <input type="color" id="bgColor">
+
+                <label>Gambar Background (URL, Prioritas 2):</label>
+                <input type="text" id="bgImageUrl" placeholder="URL Gambar Background"><br>
+                
+                <label>Gambar Background (Dari Perangkat, Prioritas 1):</label>
+                <input type="file" id="bgImageInput" accept="image/*">
+                <img id="bgImagePreview" src="" style="max-width:100%; margin-bottom:15px; display:block; border-radius:8px; max-height: 150px; object-fit: cover;">
+
+                <label>Warna Sidebar:</label>
+                <input type="color" id="sidebarColor" value="#2c3e50">
+
+                <h3>Informasi Publik</h3>
+                <label>Nama Penangkaran:</label>
+                <input type="text" id="nameInput">
+                
+                <label>Deskripsi:</label>
+                <textarea id="descInput" rows="3"></textarea>
+                
+                <label>Kontak (Nomor WA):</label>
+                <input type="text" id="contactInput" placeholder="Contoh: 08123456789">
+                
+                <label>Lokasi (Alamat Lengkap/Link Maps):</label>
+                <input type="text" id="locationInput" placeholder="Contoh: Jl. Merpati No. 12, Jakarta">
+                
+                <button type="submit">Simpan Info & Akun</button>
+            </form>
+        </section>
+
+        <section id="birds" style="display:none;">
+            <h2>Manajemen Data Burung</h2>
+            
+            <div class="search-container">
+                <input type="text" id="searchInputAdmin" placeholder="Cari No Ring atau Jenis Burung...">
+                <button onclick="filterBirds()">Cari</button>
+            </div>
+            
+            <h3>Tambah Burung Baru</h3>
+            <form id="addForm">
+                <input type="text" id="noRing" placeholder="No Ring" required>
+                <input type="text" id="jenisBurung" placeholder="Jenis Burung" required>
+                <select id="jenisKelamin">
+                    <option value="Jantan">Jantan</option>
+                    <option value="Betina">Betina</option>
+                </select>
+                <input type="date" id="tglLahir" required>
+                <input type="text" id="indukanJ" placeholder="Indukan Jantan (Optional)">
+                <input type="text" id="indukanB" placeholder="Indukan Betina (Optional)">
+                <button type="submit">Tambah Burung</button>
+            </form>
+
+            <h3>Daftar Burung</h3>
+            <div style="overflow-x: auto;">
+                <table id="birdsTable">
+                    <thead>
+                        <tr>
+                            <th>No Ring</th>
+                            <th>Jenis Burung</th>
+                            <th>Jenis Kelamin</th>
+                            <th>Tgl Lahir</th>
+                            <th>Indukan J</th>
+                            <th>Indukan B</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <h3>Edit Burung</h3>
+        <label>No Ring:</label><input type="text" id="editNoRing">
+        <label>Jenis Burung:</label><input type="text" id="editJenis">
+        
+        <label>Jenis Kelamin:</label>
+        <select id="editJK">
+            <option value="Jantan">Jantan</option>
+            <option value="Betina">Betina</option>
+        </select>
+        
+        <label>Tgl Lahir:</label><input type="date" id="editTgl">
+        <label>Indukan J:</label><input type="text" id="editIndJ">
+        <label>Indukan B:</label><input type="text" id="editIndB">
+        
+        <div class="modal-actions">
+            <button class="saveBtn">Simpan</button>
+            <button class="cancelBtn">Batal</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ***************************************************************
+// Master Key dan Bin ID sudah terisi dari file terakhir Anda.
+// ***************************************************************
+const MASTER_KEY = "$2a$10$nrMeKWyPPNZgTWaLWFhCxOJegKGOJmVvx4n1p8owazwvD3qZnmkgi"; 
+const BIRDS_BIN_ID = "6912191e43b1c97be9a51792"; 
+const BIRDS_JSONBIN_URL = `https://api.jsonbin.io/v3/b/${BIRDS_BIN_ID}`;
+const INFO_BIN_ID = "691219e143b1c97be9a518fe"; 
+const INFO_JSONBIN_URL = `https://api.jsonbin.io/v3/b/${INFO_BIN_ID}`;
+
+let birdsCache = []; 
+let editIndex = null;
+let currentSiteInfo = {}; 
+const LOGIN_KEY = 'adminLoggedIn'; // Kunci sesi di localStorage
+
+function readAndPreviewFile(file, previewId){
+    return new Promise((resolve, reject) => {
+        if(!file) { resolve(''); return; }
+        const reader = new FileReader();
+        reader.onload = function(ev){ 
+            document.getElementById(previewId).src = ev.target.result;
+            resolve(ev.target.result); 
+        }
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+document.getElementById('logoInput').addEventListener('change', function(e){
+    readAndPreviewFile(e.target.files[0], 'logoPreview');
+});
+
+document.getElementById('bgImageInput').addEventListener('change', function(e){
+    readAndPreviewFile(e.target.files[0], 'bgImagePreview');
+    document.getElementById('bgImageUrl').value = ''; 
+});
+
+// ===== Navigasi & Tampilan Sidebar =====
+const btnInfo = document.getElementById('btnInfo');
+const btnBirds = document.getElementById('btnBirds');
+function showSection(id){
+    document.querySelectorAll('main section').forEach(sec=>sec.style.display='none');
+    document.getElementById(id).style.display='block';
+    btnInfo.classList.remove('active');
+    btnBirds.classList.remove('active');
+    if(id==='info') btnInfo.classList.add('active');
+    else {
+        btnBirds.classList.add('active');
+        renderTable(); 
+    }
+}
+
+// -------------------------------------------------------------
+// === FUNGSI INFO WEBSITE (LOAD & SAVE) ===
+// -------------------------------------------------------------
+function applyInfoToDOM(info){
+    currentSiteInfo = info;
+
+    // --- Data Akun Admin ---
+    document.getElementById('adminUsername').value = info.adminUsername || '';
+    document.getElementById('adminPassword').value = info.adminPassword || '';
+    document.getElementById('adminEmail').value = info.adminEmail || '';
+
+    // --- Logo (prioritas URL, lalu Base64) ---
+let logoSrc = '';
+if (info.logoUrl && info.logoUrl.trim() !== '') {
+    logoSrc = info.logoUrl.trim();
+} else if (info.logoBase64 && info.logoBase64.startsWith('data:image')) {
+    logoSrc = info.logoBase64;
+}
+
+document.getElementById('logoPreview').src = logoSrc;
+document.getElementById('sidebarLogo').src = logoSrc;
+document.getElementById('logoUrl').value = info.logoUrl || '';
+
+// --- Background (prioritas URL, lalu Base64, lalu warna) ---
+let bgSrc = '';
+if (info.bgImageUrl && info.bgImageUrl.trim() !== '') {
+    bgSrc = info.bgImageUrl.trim();
+} else if (info.bgImageBase64 && info.bgImageBase64.startsWith('data:image')) {
+    bgSrc = info.bgImageBase64;
+}
+
+document.getElementById('bgImagePreview').src = bgSrc;
+document.getElementById('bgImageUrl').value = info.bgImageUrl || '';
+document.getElementById('bgColor').value = info.bgColor || '#f5f5f5';
+
+const body = document.body;
+if (bgSrc) {
+    body.style.background = `url(${bgSrc}) no-repeat center/cover`;
+} else {
+    body.style.background = info.bgColor || '#f5f5f5';
+}
+
+    const body = document.body;
+    if (bgImageBase64) {
+        body.style.background = `url(${bgImageBase64}) no-repeat center/cover`;
+    } else if (info.bgImageUrl) {
+        body.style.background = `url(${info.bgImageUrl}) no-repeat center/cover`;
+    } else {
+        body.style.background = info.bgColor || '#f5f5f5';
+    }
+
+    // --- Sidebar ---
+    const sidebarColor = info.sidebarColor || '#2c3e50';
+    document.getElementById('sidebarColor').value = sidebarColor;
+    document.querySelector('aside').style.background = sidebarColor;
+
+    // --- Informasi Publik ---
+    document.getElementById('nameInput').value = info.name || '';
+    document.getElementById('penangkaranName').textContent = info.name || 'Nama Penangkaran';
+    document.getElementById('descInput').value = info.description || '';
+    document.getElementById('contactInput').value = info.contact || '';
+    document.getElementById('locationInput').value = info.location || '';
+}
+
+
+async function loadInfoFromAPI(){
+    try {
+        const response = await fetch(`${INFO_JSONBIN_URL}/latest`, { headers: { 'X-Master-Key': MASTER_KEY } });
+        if (!response.ok) throw new Error('Failed to fetch info.');
+        const result = await response.json(); 
+        applyInfoToDOM(result.record || {});
+        return result.record;
+    } catch (error) {
+        console.error("Error loading site info:", error);
+        return {};
+    }
+}
+
+async function saveInfoToAPI(infoData){
+    try {
+        const response = await fetch(INFO_JSONBIN_URL, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'X-Master-Key': MASTER_KEY },
+            body: JSON.stringify(infoData)
+        });
+        if (!response.ok) throw new Error('Failed to save info.');
+        applyInfoToDOM(infoData);
+        alert('Info website dan Akun Admin berhasil disimpan!');
+        return true; 
+    } catch (error) {
+        console.error("Error saving site info:", error);
+        alert('Gagal menyimpan info website. Cek Master Key/ID, atau ukuran gambar (>2MB).');
+        return false;
+    }
+}
+
+document.getElementById('infoForm').addEventListener('submit', async function(e){
+    e.preventDefault();
+
+    // --- Ambil Logo (Base64 atau kosong) ---
+    let logoBase64 = '';
+    const logoSrc = document.getElementById('logoPreview').src;
+    if (logoSrc.startsWith('data:image')) logoBase64 = logoSrc;
+
+    // --- Ambil Background (Base64 atau kosong) ---
+    let bgBase64 = '';
+    const bgPreviewSrc = document.getElementById('bgImagePreview').src;
+    if (bgPreviewSrc.startsWith('data:image')) bgBase64 = bgPreviewSrc;
+
+    // --- Siapkan Data untuk Disimpan ---
+    const infoToSave = {
+        adminUsername: document.getElementById('adminUsername').value.trim(),
+        adminPassword: document.getElementById('adminPassword').value.trim(),
+        adminEmail: document.getElementById('adminEmail').value.trim(),
+        logoBase64,
+        logoUrl: document.getElementById('logoUrl').value.trim(),
+        bgColor: document.getElementById('bgColor').value,
+        bgImageUrl: document.getElementById('bgImageUrl').value.trim(),
+        bgImageBase64: bgBase64,
+        sidebarColor: document.getElementById('sidebarColor').value,
+        name: document.getElementById('nameInput').value.trim(),
+        description: document.getElementById('descInput').value.trim(),
+        contact: document.getElementById('contactInput').value.trim(),
+        location: document.getElementById('locationInput').value.trim()
+    };
+
+    // --- Simpan ke JSONBin ---
+    await saveInfoToAPI(infoToSave);
+});
+
+// -------------------------------------------------------------
+// === FUNGSI LOGIN / LOGOUT ===
+// -------------------------------------------------------------
+
+async function handleLogin() {
+    const enteredUser = document.getElementById('loginUsername').value.trim();
+    const enteredPass = document.getElementById('loginPassword').value.trim();
+    const loginMsg = document.getElementById('loginMessage');
+    
+    // Muat data info terbaru untuk cek kredensial
+    const info = await loadInfoFromAPI(); 
+
+    // Cek apakah kredensial sudah diset di JSONbin (default saat pertama kali dibuka)
+    const storedUser = info.adminUsername || 'admin';
+    const storedPass = info.adminPassword || '123456';
+    
+    if (enteredUser === storedUser && enteredPass === storedPass) {
+        localStorage.setItem(LOGIN_KEY, 'true');
+        loginMsg.style.display = 'none';
+        showAdminPanel();
+    } else {
+        loginMsg.style.display = 'block';
+    }
+}
+
+function handleLogout() {
+    if (confirm("Anda yakin ingin keluar?")) {
+        localStorage.removeItem(LOGIN_KEY);
+        window.location.reload(); 
+    }
+}
+
+function forgotPassword(e) {
+    e.preventDefault();
+    const adminEmail = currentSiteInfo.adminEmail || 'admin@contoh.com';
+    alert(`Untuk reset sandi, silakan hubungi administrator sistem melalui email: ${adminEmail}.\n\n(Catatan: Reset sandi berbasis email tidak didukung pada aplikasi sederhana ini. Sandi harus direset secara manual oleh admin yang berwenang.)`);
+}
+
+function showAdminPanel() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appContainer').style.display = 'flex';
+    showSection('info'); // Tampilkan default section
+}
+
+async function checkLoginStatus() {
+    // Muat info di awal untuk mengisi currentSiteInfo
+    await loadInfoFromAPI(); 
+
+    if (localStorage.getItem(LOGIN_KEY) === 'true') {
+        showAdminPanel();
+    } else {
+        document.getElementById('loginScreen').style.display = 'flex';
+    }
+}
+
+
+// -------------------------------------------------------------
+// === FUNGSI DATA BURUNG (CRUD + SEARCH) ===
+// -------------------------------------------------------------
+async function getBirds(){ 
+    try {
+        const response = await fetch(`${BIRDS_JSONBIN_URL}/latest`, { headers: { 'X-Master-Key': MASTER_KEY, 'X-Bin-Versioning': 'false' } });
+        if (!response.ok) throw new Error('Failed to fetch bird data.');
+        const result = await response.json(); 
+        birdsCache = result.record || []; 
+        if (!Array.isArray(birdsCache)) { birdsCache = []; }
+        return birdsCache; 
+    } catch (error) {
+        console.error("Error fetching bird data:", error);
+        return [];
+    }
+}
+
+async function saveAllBirds(birdsData){
+    try {
+        const response = await fetch(BIRDS_JSONBIN_URL, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'X-Master-Key': MASTER_KEY },
+            body: JSON.stringify(birdsData)
+        });
+        if (!response.ok) throw new Error('Failed to save data.');
+        birdsCache = birdsData; 
+        return true; 
+    } catch (error) {
+        console.error("Error saving data:", error);
+        alert('Gagal menyimpan data burung. Cek Master Key/ID, atau data terlalu besar (>2MB).');
+        return false;
+    }
+}
+
+async function renderTable(filterQuery = ''){
+    const tbody = document.getElementById('birdsTable').querySelector('tbody');
+    if (birdsCache.length === 0 && filterQuery === '') {
+        tbody.innerHTML='<tr><td colspan="7">Memuat data dari JSON Bin...</td></tr>'; 
+        await getBirds();
+    }
+    
+    tbody.innerHTML=''; 
+    const query = filterQuery.toLowerCase();
+
+    const filteredBirds = birdsCache.filter(b => {
+        return b.noRing.toLowerCase().includes(query) || 
+               b.jenis.toLowerCase().includes(query);
+    });
+
+    if (filteredBirds.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7">Tidak ada data burung yang cocok dengan "${filterQuery}".</td></tr>`;
+        return;
+    }
+
+    filteredBirds.forEach((b,i)=>{
+        const originalIndex = birdsCache.findIndex(item => item.noRing === b.noRing);
+        const row = tbody.insertRow();
+        row.insertCell(0).textContent=b.noRing;
+        row.insertCell(1).textContent=b.jenis;
+        row.insertCell(2).textContent=b.jenisKelamin;
+        row.insertCell(3).textContent=b.tglLahir;
+        row.insertCell(4).textContent=b.indukanJ;
+        row.insertCell(5).textContent=b.indukanB;
+        const aksi=row.insertCell(6);
+        aksi.innerHTML=`<button class="actionBtn" onclick="openEdit(${originalIndex})">Edit</button>
+                        <button class="actionBtn" onclick="deleteBird(${originalIndex})">Hapus</button>`;
+    });
+}
+
+function filterBirds() {
+    const query = document.getElementById('searchInputAdmin').value.trim();
+    renderTable(query);
+}
+
+document.getElementById('searchInputAdmin').addEventListener('input', filterBirds);
+
+document.getElementById('addForm').addEventListener('submit', async function(e){
+    e.preventDefault();
+    const newBirdData = {
+        noRing: document.getElementById('noRing').value.trim(),
+        jenis: document.getElementById('jenisBurung').value.trim(),
+        jenisKelamin: document.getElementById('jenisKelamin').value,
+        tglLahir: document.getElementById('tglLahir').value,
+        indukanJ: document.getElementById('indukanJ').value.trim(),
+        indukanB: document.getElementById('indukanB').value.trim()
+    };
+    const currentBirds = await getBirds(); 
+    currentBirds.push(newBirdData);
+    const success = await saveAllBirds(currentBirds);
+    if(success){ renderTable(); this.reset(); alert('Data burung berhasil ditambahkan!'); } 
+    else { alert('Gagal menambah data burung.'); }
+});
+
+const modal=document.getElementById('editModal');
+function openEdit(i){
+    if(birdsCache.length === 0) { alert("Data belum dimuat."); return; }
+    editIndex=i;
+    const b=birdsCache[i];
+    document.getElementById('editNoRing').value=b.noRing;
+    document.getElementById('editJenis').value=b.jenis;
+    document.getElementById('editJK').value=b.jenisKelamin;
+    document.getElementById('editTgl').value=b.tglLahir;
+    document.getElementById('editIndJ').value=b.indukanJ;
+    document.getElementById('editIndB').value=b.indukanB;
+    modal.style.display='block';
+}
+
+modal.querySelector('.cancelBtn').addEventListener('click',()=>{ modal.style.display='none'; });
+modal.querySelector('.saveBtn').addEventListener('click', async ()=>{
+    const updatedBirdData = {
+        noRing: document.getElementById('editNoRing').value.trim(),
+        jenis: document.getElementById('editJenis').value.trim(),
+        jenisKelamin: document.getElementById('editJK').value,
+        tglLahir: document.getElementById('editTgl').value,
+        indukanJ: document.getElementById('editIndJ').value.trim(),
+        indukanB: document.getElementById('editIndB').value.trim()
+    };
+    const birds = [...birdsCache];
+    birds[editIndex] = updatedBirdData;
+    const success = await saveAllBirds(birds);
+    if(success){ renderTable(); modal.style.display='none'; alert('Data burung berhasil diperbarui!'); }
+});
+
+async function deleteBird(i){
+    if(confirm("Hapus data burung ini?")){
+        const birds = [...birdsCache];
+        birds.splice(i,1);
+        const success = await saveAllBirds(birds);
+        if(success){ renderTable(); alert('Data burung berhasil dihapus!'); }
+    }
+}
+
+// Jalankan pengecekan login saat halaman dimuat
+checkLoginStatus(); 
+// =====================================================
+// 🔗 FITUR BARU: UPLOAD GAMBAR OTOMATIS KE IMGUR
+// =====================================================
+const IMGUR_CLIENT_ID = "546358bdef1f4f3"; // Client ID publik Imgur (aman untuk anonymous upload)
+
+async function uploadToImgur(file) {
+    if (!file) return null;
+    if (file.size > 10 * 1024 * 1024) {
+        alert("Ukuran gambar maksimal 10 MB untuk upload ke Imgur.");
+        return null;
+    }
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+        const response = await fetch("https://api.imgur.com/3/image", {
+            method: "POST",
+            headers: { Authorization: "Client-ID " + IMGUR_CLIENT_ID },
+            body: formData
+        });
+        const data = await response.json();
+        if (data.success) {
+            return data.data.link;
+        } else {
+            console.error("Imgur upload gagal:", data);
+            alert("Upload ke Imgur gagal. Coba lagi nanti.");
+            return null;
+        }
+    } catch (err) {
+        console.error("Error koneksi Imgur:", err);
+        alert("Gagal terhubung ke Imgur. Periksa koneksi internet.");
+        return null;
+    }
+}
+
+// Listener otomatis ke input logo dan background
+document.getElementById('logoInput').addEventListener('change', async function(e){
+    const file = e.target.files[0];
+    if (file) {
+        const imgUrl = await uploadToImgur(file);
+        if (imgUrl) {
+            document.getElementById('logoUrl').value = imgUrl;
+            document.getElementById('logoPreview').src = imgUrl;
+            alert("✅ Logo berhasil diupload ke Imgur!");
+        }
+    }
+});
+
+document.getElementById('bgImageInput').addEventListener('change', async function(e){
+    const file = e.target.files[0];
+    if (file) {
+        const imgUrl = await uploadToImgur(file);
+        if (imgUrl) {
+            document.getElementById('bgImageUrl').value = imgUrl;
+            document.getElementById('bgImagePreview').src = imgUrl;
+            alert("✅ Gambar background berhasil diupload ke Imgur!");
+        }
+    }
+});
+</script>
+</body>
+</html>
