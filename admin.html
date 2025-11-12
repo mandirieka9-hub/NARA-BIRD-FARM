@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel Penangkaran Burung</title>
+<style>
+body { margin:0; font-family: Arial, sans-serif; display:flex; height:100vh; transition: background 0.3s; }
+aside {
+    width:250px; background:#2c3e50; color:white; display:flex; flex-direction:column; 
+    padding:20px; box-sizing:border-box; transition: background 0.3s; text-align:center; align-items:center;
+    height:100vh;
+}
+aside img { max-width:100px; margin:0 auto 10px auto; border-radius:10px; }
+aside h2 { font-size:18px; margin:5px 0; border-top:1px solid rgba(255,255,255,0.2); padding-top:10px; width:100%; }
+aside p { font-size:14px; margin-bottom:20px; color:#ecf0f1; }
+aside button { background:#34495e; border:none; color:white; text-align:left; padding:10px; cursor:pointer;
+    width:100%; font-size:16px; border-radius:8px; margin-bottom:8px; transition:all 0.3s; }
+aside button:hover { background:#1abc9c; transform:scale(1.03); box-shadow:0 2px 6px rgba(0,0,0,0.3);}
+aside button.active { background:#16a085; box-shadow:inset 0 0 5px rgba(0,0,0,0.2); }
+aside #logoutBtn { display:none; }
+main { flex:1; padding:20px; overflow-y:auto; transition: background 0.3s; }
+form { background:white; padding:20px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); margin-bottom:20px; }
+form label { display:block; margin-bottom:5px; font-weight:bold; }
+form input[type=text], form input[type=color], form input[type=email], form input[type=password], textarea, select {
+    width:100%; padding:8px; margin-bottom:15px; border-radius:5px; border:1px solid #ccc;
+}
+form button { padding:8px 12px; border:none; border-radius:5px; background:#2c3e50; color:white; cursor:pointer; }
+form button:hover { background:#16a085; }
+table { width:100%; border-collapse:collapse; background:white; border-radius:10px; overflow:hidden;
+    box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+th, td { padding:10px; border-bottom:1px solid #ccc; text-align:left; }
+th { background:#34495e; color:white; }
+button.actionBtn { padding:5px 10px; border:none; border-radius:5px; cursor:pointer; background:#2c3e50; color:white; }
+button.actionBtn:hover { background:#16a085; }
+.search-container { margin-bottom:20px; display:flex; gap:10px; }
+.search-container input { flex-grow:1; }
+</style>
+</head>
+<body>
+
+<div id="appContainer" style="width:100%; display:flex;">
+    <aside>
+        <img id="sidebarLogo" src="" alt="Logo">
+        <p id="penangkaranName">Nama Penangkaran</p>
+        <h2>Menu</h2>
+        <button onclick="showSection('info')" id="btnInfo" class="active">Info</button>
+        <button onclick="showSection('birds')" id="btnBirds">Data</button>
+    </aside>
+
+    <main>
+        <section id="info">
+            <h2>Pengaturan Website</h2>
+            <form id="infoForm">
+                <h3>Pengaturan Akun Admin</h3>
+                <label>Username Admin:</label>
+                <input type="text" id="adminUsername" required>
+                <label>Password Admin (Baru):</label>
+                <input type="password" id="adminPassword" required>
+                <label>Email Admin:</label>
+                <input type="email" id="adminEmail" required>
+
+                <h3>Pengaturan Tampilan</h3>
+                <label>URL Logo:</label>
+                <input type="text" id="logoUrl" placeholder="https://contoh.com/logo.png">
+                <img id="logoPreview" src="" style="max-width:120px; margin-bottom:15px; display:block; border-radius:8px;">
+
+                <label>Warna Background:</label>
+                <input type="color" id="bgColor">
+
+                <label>URL Gambar Background:</label>
+                <input type="text" id="bgImageUrl" placeholder="https://contoh.com/background.jpg">
+                <img id="bgImagePreview" src="" style="max-width:100%; margin-bottom:15px; display:block; border-radius:8px; max-height:150px; object-fit:cover;">
+
+                <label>Warna Sidebar:</label>
+                <input type="color" id="sidebarColor" value="#2c3e50">
+
+                <h3>Informasi Publik</h3>
+                <label>Nama Penangkaran:</label>
+                <input type="text" id="nameInput">
+                <label>Deskripsi:</label>
+                <textarea id="descInput" rows="3"></textarea>
+                <label>Kontak (Nomor WA):</label>
+                <input type="text" id="contactInput" placeholder="08123456789">
+                <label>Lokasi (Alamat/Maps):</label>
+                <input type="text" id="locationInput">
+                <button type="submit">Simpan Info</button>
+            </form>
+        </section>
+
+        <section id="birds" style="display:none;">
+            <h2>Manajemen Data Burung</h2>
+            <div class="search-container">
+                <input type="text" id="searchInputAdmin" placeholder="Cari No Ring atau Jenis Burung...">
+                <button onclick="filterBirds()">Cari</button>
+            </div>
+            <h3>Tambah Burung Baru</h3>
+            <form id="addForm">
+                <input type="text" id="noRing" placeholder="No Ring" required>
+                <input type="text" id="jenisBurung" placeholder="Jenis Burung" required>
+                <select id="jenisKelamin"><option value="Jantan">Jantan</option><option value="Betina">Betina</option></select>
+                <input type="date" id="tglLahir" required>
+                <input type="text" id="indukanJ" placeholder="Indukan Jantan (Optional)">
+                <input type="text" id="indukanB" placeholder="Indukan Betina (Optional)">
+                <button type="submit">Tambah Burung</button>
+            </form>
+            <table id="birdsTable"><thead><tr><th>No Ring</th><th>Jenis</th><th>JK</th><th>Tgl Lahir</th><th>Indukan J</th><th>Indukan B</th><th>Aksi</th></tr></thead><tbody></tbody></table>
+        </section>
+    </main>
+</div>
+
+<script>
+const MASTER_KEY = "$2a$10$nrMeKWyPPNZgTWaLWFhCxOJegKGOJmVvx4n1p8owazwvD3qZnmkgi";
+const BIRDS_BIN_ID = "6912191e43b1c97be9a51792";
+const INFO_BIN_ID = "691219e143b1c97be9a518fe";
+const BIRDS_URL = `https://api.jsonbin.io/v3/b/${BIRDS_BIN_ID}`;
+const INFO_URL = `https://api.jsonbin.io/v3/b/${INFO_BIN_ID}`;
+let birdsCache = [], currentSiteInfo = {};
+
+function applyInfoToDOM(info){
+    currentSiteInfo = info;
+    document.getElementById('adminUsername').value = info.adminUsername || '';
+    document.getElementById('adminPassword').value = info.adminPassword || '';
+    document.getElementById('adminEmail').value = info.adminEmail || '';
+    document.getElementById('logoUrl').value = info.logoUrl || '';
+    document.getElementById('logoPreview').src = info.logoUrl || '';
+    document.getElementById('sidebarLogo').src = info.logoUrl || '';
+    document.getElementById('bgImageUrl').value = info.bgImageUrl || '';
+    document.getElementById('bgImagePreview').src = info.bgImageUrl || '';
+    document.body.style.background = info.bgImageUrl ? `url(${info.bgImageUrl}) no-repeat center/cover` : info.bgColor || '#f5f5f5';
+    document.getElementById('bgColor').value = info.bgColor || '#f5f5f5';
+    document.querySelector('aside').style.background = info.sidebarColor || '#2c3e50';
+    document.getElementById('sidebarColor').value = info.sidebarColor || '#2c3e50';
+    document.getElementById('nameInput').value = info.name || '';
+    document.getElementById('descInput').value = info.description || '';
+    document.getElementById('contactInput').value = info.contact || '';
+    document.getElementById('locationInput').value = info.location || '';
+    document.getElementById('penangkaranName').textContent = info.name || 'Nama Penangkaran';
+}
+
+async function loadInfo(){
+    try{const r=await fetch(`${INFO_URL}/latest`,{headers:{'X-Master-Key':MASTER_KEY}});const j=await r.json();applyInfoToDOM(j.record||{});}catch(e){console.error(e);}
+}
+
+document.getElementById('infoForm').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const info={
+        adminUsername:adminUsername.value.trim(),
+        adminPassword:adminPassword.value.trim(),
+        adminEmail:adminEmail.value.trim(),
+        logoUrl:logoUrl.value.trim(),
+        bgColor:bgColor.value,
+        bgImageUrl:bgImageUrl.value.trim(),
+        sidebarColor:sidebarColor.value,
+        name:nameInput.value.trim(),
+        description:descInput.value.trim(),
+        contact:contactInput.value.trim(),
+        location:locationInput.value.trim()
+    };
+    try{
+        await fetch(INFO_URL,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':MASTER_KEY},body:JSON.stringify(info)});
+        alert('Info berhasil disimpan!');
+        applyInfoToDOM(info);
+    }catch(err){alert('Gagal menyimpan info.');}
+});
+
+function showSection(id){
+    document.querySelectorAll('main section').forEach(s=>s.style.display='none');
+    document.getElementById(id).style.display='block';
+    document.getElementById('btnInfo').classList.toggle('active',id==='info');
+    document.getElementById('btnBirds').classList.toggle('active',id==='birds');
+}
+async function getBirds(){
+    try{const r=await fetch(`${BIRDS_URL}/latest`,{headers:{'X-Master-Key':MASTER_KEY}});const j=await r.json();birdsCache=j.record||[];}catch(e){birdsCache=[];}
+    return birdsCache;
+}
+async function saveBirds(b){await fetch(BIRDS_URL,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':MASTER_KEY},body:JSON.stringify(b)});}
+async function renderTable(q=''){if(birdsCache.length===0)await getBirds();const t=document.querySelector('#birdsTable tbody');t.innerHTML='';
+    const f=birdsCache.filter(x=>x.noRing.toLowerCase().includes(q)||x.jenis.toLowerCase().includes(q));
+    f.forEach((b,i)=>{const r=t.insertRow();r.insertCell(0).textContent=b.noRing;r.insertCell(1).textContent=b.jenis;r.insertCell(2).textContent=b.jenisKelamin;
+        r.insertCell(3).textContent=b.tglLahir;r.insertCell(4).textContent=b.indukanJ;r.insertCell(5).textContent=b.indukanB;
+        const a=r.insertCell(6);a.innerHTML=`<button class='actionBtn' onclick='delBird(${i})'>Hapus</button>`;});
+}
+document.getElementById('addForm').addEventListener('submit',async e=>{
+    e.preventDefault();const d={noRing:noRing.value.trim(),jenis:jenisBurung.value.trim(),jenisKelamin:jenisKelamin.value,tglLahir:tglLahir.value,indukanJ:indukanJ.value,indukanB:indukanB.value};
+    birdsCache.push(d);await saveBirds(birdsCache);alert('Data ditambah!');renderTable();e.target.reset();
+});
+async function delBird(i){if(confirm('Hapus data ini?')){birdsCache.splice(i,1);await saveBirds(birdsCache);renderTable();}}
+document.getElementById('searchInputAdmin').addEventListener('input',e=>renderTable(e.target.value.trim()));
+loadInfo();showSection('info');
+</script>
+</body>
+</html>
