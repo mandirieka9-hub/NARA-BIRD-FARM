@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Data Burung</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-color: #f4f4f4;
+      display: flex;
+      min-height: 100vh;
+      color: #fff;
+      transition: background 0.3s ease-in-out;
+    }
+
+    .sidebar {
+      width: 240px;
+      background: rgba(44, 62, 80, 0.85);
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.4);
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      transition: background 0.3s ease-in-out;
+    }
+
+    .sidebar-logo img {
+      width: 110px;
+      height: 110px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar-logo img:hover {
+      transform: scale(1.05);
+    }
+
+    .sidebar-name {
+      margin-top: 10px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.95);
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+      text-align: center;
+    }
+
+    .sidebar-desc {
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+      text-align: center;
+      margin-top: 5px;
+      line-height: 1.4;
+      max-width: 200px;
+    }
+
+    .sidebar-links {
+      margin-top: 25px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .link-item {
+      text-align: center;
+    }
+
+    .link-item a {
+      color: #fff;
+      font-size: 28px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+    }
+
+    .link-item a:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(1.1);
+    }
+
+    .link-item span {
+      display: block;
+      font-size: 13px;
+      margin-top: 6px;
+      opacity: 0.9;
+    }
+
+    .content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .data-section {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(6px);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+      padding: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    table th, table td {
+      padding: 10px;
+      border: 1px solid rgba(255,255,255,0.2);
+      text-align: left;
+    }
+
+    table th {
+      background: rgba(255,255,255,0.15);
+    }
+
+    table tr:hover {
+      background: rgba(255,255,255,0.15);
+      cursor: pointer;
+    }
+
+    input {
+      width: 60%;
+      padding: 8px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: none;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+    }
+
+    /* Popup Card Detail */
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.6);
+      z-index: 999;
+    }
+
+    .popup-content {
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(15px);
+      border-radius: 18px;
+      padding: 25px;
+      width: 90%;
+      max-width: 420px;
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      transform: scale(0.9);
+      opacity: 0;
+      animation: popupFade 0.4s forwards;
+    }
+
+    @keyframes popupFade {
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .popup-content h3 {
+      text-align: center;
+      margin-top: 0;
+      color: #fff;
+      text-shadow: 0 0 6px rgba(255,255,255,0.4);
+    }
+
+    .popup-content p {
+      margin: 8px 0;
+    }
+
+    .popup-content button {
+      display: block;
+      margin: 15px auto 0 auto;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.25);
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .popup-content button:hover {
+      background: rgba(255,255,255,0.35);
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        justify-content: space-around;
+        position: fixed;
+        top: 0;
+        z-index: 1000;
+      }
+      .content { margin-top: 180px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="sidebar-logo"><img id="logoImg" src="" alt="Logo"></div>
+    <div class="sidebar-name" id="siteName">Nama Situs</div>
+    <div class="sidebar-desc" id="siteDesc">Deskripsi singkat akan tampil di sini</div>
+    <div class="sidebar-links">
+      <div class="link-item">
+        <a id="whatsappLink" href="#" target="_blank"><i class="ri-whatsapp-fill"></i></a>
+        <span>Hubungi Kami</span>
+      </div>
+      <div class="link-item">
+        <a id="mapsLink" href="#" target="_blank"><i class="ri-map-pin-2-fill"></i></a>
+        <span>Lihat Lokasi</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="data-section">
+      <h2>Data Burung</h2>
+      <input id="searchInput" placeholder="Cari No Ring atau Jenis...">
+      <table id="birdTable">
+        <thead>
+          <tr><th>No Ring</th><th>Jenis</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Popup detail burung -->
+  <div class="popup" id="birdPopup">
+    <div class="popup-content">
+      <h3 id="popupRing"></h3>
+      <p><strong>Jenis:</strong> <span id="popupJenis"></span></p>
+      <p><strong>Gender:</strong> <span id="popupGender"></span></p>
+      <p><strong>Tanggal Lahir:</strong> <span id="popupTgl"></span></p>
+      <p><strong>Indukan Jantan:</strong> <span id="popupJantan"></span></p>
+      <p><strong>Indukan Betina:</strong> <span id="popupBetina"></span></p>
+      <button id="closePopup">Tutup</button>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://nobtyozolbbdndfowmho.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5vYnR5b3pvbGJiZG5kZm93bWhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI5NjA1NjMsImV4cCI6MjA3ODUzNjU2M30.qwr1OrXwBplwJbcTk6JJOXqRlg5xvzVVsZt9XpteJ40";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function loadSettings() {
+      const { data } = await supabase.from("settings").select("*").eq("id", 1).single();
+      if (data) {
+        document.getElementById("siteName").textContent = data.nama || "Nama Situs";
+        document.getElementById("siteDesc").textContent = data.deskripsi || "";
+        if (data.logo_url) document.getElementById("logoImg").src = data.logo_url;
+        document.body.style.backgroundImage = data.background_url ? `url(${data.background_url})` : "none";
+        document.body.style.backgroundSize = data.bg_size || "cover";
+        document.body.style.backgroundColor = data.bg_color || "#f4f4f4";
+        document.querySelector(".sidebar").style.background = `rgba(44,62,80,${data.sidebar_opacity || 0.85})`;
+        document.querySelector(".content").style.opacity = data.main_opacity || 1;
+        document.getElementById("whatsappLink").href = data.kontak ? `https://wa.me/${data.kontak.replace(/\D/g, '')}` : "#";
+        document.getElementById("mapsLink").href = data.lokasi ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.lokasi)}` : "#";
+      }
+    }
+
+    async function loadBirds(filter = "") {
+      let query = supabase.from("birds").select("*").order("id", { ascending: false });
+      if (filter) query = query.or(`no_ring.ilike.%${filter}%,jenis.ilike.%${filter}%`);
+      const { data } = await query;
+      const tbody = document.querySelector("#birdTable tbody");
+      tbody.innerHTML = "";
+      data.forEach((b) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${b.no_ring}</td><td>${b.jenis}</td>`;
+        tr.onclick = () => showPopup(b);
+        tbody.appendChild(tr);
+      });
+    }
+
+    function showPopup(b) {
+      document.getElementById("popupRing").textContent = b.no_ring;
+      document.getElementById("popupJenis").textContent = b.jenis || "-";
+      document.getElementById("popupGender").textContent = b.gender || "-";
+      document.getElementById("popupTgl").textContent = b.tgl_lahir || "-";
+      document.getElementById("popupJantan").textContent = b.indukan_jantan || "-";
+      document.getElementById("popupBetina").textContent = b.indukan_betina || "-";
+      document.getElementById("birdPopup").style.display = "flex";
+    }
+
+    document.getElementById("closePopup").addEventListener("click", () => {
+      document.getElementById("birdPopup").style.display = "none";
+    });
+
+    document.getElementById("searchInput").addEventListener("input", (e) => loadBirds(e.target.value));
+
+    loadSettings();
+    loadBirds();
+  </script>
+</body>
+</html>
