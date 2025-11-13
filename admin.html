@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Panel</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-color: #f4f4f4;
+      display: flex;
+      min-height: 100vh;
+      color: #fff;
+      transition: background 0.3s ease-in-out;
+    }
+
+    .sidebar {
+      width: 240px;
+      background: rgba(44, 62, 80, 0.85);
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.4);
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      transition: background 0.3s ease-in-out;
+    }
+
+    .sidebar-logo img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
+    }
+
+    .sidebar-name {
+      margin-top: 10px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.95);
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+    }
+
+    .menu {
+      margin-top: 30px;
+      width: 100%;
+    }
+
+    .menu a {
+      display: block;
+      padding: 10px 15px;
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      border-radius: 8px;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+    }
+
+    .menu a:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .setting-section, .data-section {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(6px);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border-radius: 6px;
+    }
+
+    button {
+      background: rgba(255, 255, 255, 0.25);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s ease-in-out;
+    }
+
+    button:hover { background: rgba(255, 255, 255, 0.4); }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.95);
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.2);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    table th, table td {
+      padding: 8px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    table th {
+      background: rgba(255,255,255,0.15);
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        justify-content: space-around;
+        position: fixed;
+        top: 0;
+        z-index: 1000;
+      }
+      .content { margin-top: 160px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="sidebar-logo"><img id="logoImg" src="" alt="Logo"></div>
+    <div class="sidebar-name" id="siteName">Nama Situs</div>
+    <div class="menu">
+      <a href="#" id="menu-setting"><i class="ri-settings-3-line"></i> Pengaturan</a>
+      <a href="#" id="menu-data"><i class="ri-database-2-line"></i> Data Burung</a>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="setting-section" id="settingSection">
+      <h2>Pengaturan</h2>
+
+      <label>Upload Logo:</label>
+      <input type="file" id="logoInput" accept="image/*">
+
+      <label>Upload Background:</label>
+      <input type="file" id="backgroundInput" accept="image/*">
+      <button id="removeBackground">Hapus Background</button>
+
+      <label>Nama:</label>
+      <input type="text" id="nama">
+
+      <label>Deskripsi:</label>
+      <textarea id="deskripsi"></textarea>
+
+      <label>Kontak:</label>
+      <input type="text" id="kontak">
+
+      <label>Lokasi:</label>
+      <input type="text" id="lokasi">
+
+      <label>Opacity Background:</label>
+      <input type="range" id="bgOpacity" min="0" max="1" step="0.05" value="0.6">
+      <span id="bgOpacityValue">0.6</span>
+
+      <label>Opacity Tampilan:</label>
+      <input type="range" id="mainOpacity" min="0" max="1" step="0.05" value="1">
+      <span id="mainOpacityValue">1</span>
+
+      <label>Opacity Sidebar:</label>
+      <input type="range" id="sidebarOpacity" min="0" max="1" step="0.05" value="0.85">
+      <span id="sidebarOpacityValue">0.85</span>
+
+      <label>Ukuran Background:</label>
+      <select id="bgSize">
+        <option value="cover">Cover</option>
+        <option value="contain">Contain</option>
+        <option value="auto">Auto</option>
+      </select>
+
+      <label>Warna Sidebar:</label>
+      <input type="color" id="sidebarColor" value="#2c3e50">
+
+      <label>Warna Background:</label>
+      <input type="color" id="bgColor" value="#f4f4f4">
+
+      <button id="saveSettings">Simpan Pengaturan</button>
+    </div>
+
+    <!-- Data Burung -->
+    <div class="data-section" id="dataSection" style="display:none;">
+      <h2>Data Burung</h2>
+      <div>
+        <input id="searchInput" placeholder="Cari No Ring atau Jenis..." style="padding:8px;border-radius:6px;border:none;width:70%;">
+        <button id="addBirdBtn">Tambah Data</button>
+      </div>
+      <table id="birdTable">
+        <thead>
+          <tr>
+            <th>No Ring</th><th>Jenis</th><th>Gender</th><th>Tgl Lahir</th><th>Jantan</th><th>Betina</th><th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://nobtyozolbbdndfowmho.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5vYnR5b3pvbGJiZG5kZm93bWhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI5NjA1NjMsImV4cCI6MjA3ODUzNjU2M30.qwr1OrXwBplwJbcTk6JJOXqRlg5xvzVVsZt9XpteJ40";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const btnSetting = document.getElementById("menu-setting");
+    const btnData = document.getElementById("menu-data");
+    const settingSection = document.getElementById("settingSection");
+    const dataSection = document.getElementById("dataSection");
+
+    btnSetting.addEventListener("click", () => {
+      settingSection.style.display = "block";
+      dataSection.style.display = "none";
+    });
+    btnData.addEventListener("click", () => {
+      settingSection.style.display = "none";
+      dataSection.style.display = "block";
+      loadBirds();
+    });
+
+    // ==== LOAD SETTINGS ====
+    async function loadSettings() {
+      const { data } = await supabase.from("settings").select("*").eq("id", 1).single();
+      if (data) {
+        document.getElementById("nama").value = data.nama || "";
+        document.getElementById("deskripsi").value = data.deskripsi || "";
+        document.getElementById("kontak").value = data.kontak || "";
+        document.getElementById("lokasi").value = data.lokasi || "";
+        document.getElementById("bgOpacity").value = data.bg_opacity || 0.6;
+        document.getElementById("bgOpacityValue").textContent = data.bg_opacity || 0.6;
+        document.getElementById("mainOpacity").value = data.main_opacity || 1;
+        document.getElementById("mainOpacityValue").textContent = data.main_opacity || 1;
+        document.getElementById("sidebarOpacity").value = data.sidebar_opacity || 0.85;
+        document.getElementById("sidebarOpacityValue").textContent = data.sidebar_opacity || 0.85;
+        document.getElementById("bgSize").value = data.bg_size || "cover";
+        document.getElementById("sidebarColor").value = data.sidebar_color || "#2c3e50";
+        document.getElementById("bgColor").value = data.bg_color || "#f4f4f4";
+        if (data.logo_url) document.getElementById("logoImg").src = data.logo_url;
+        if (data.nama) document.getElementById("siteName").textContent = data.nama;
+        document.body.style.backgroundImage = data.background_url ? `url(${data.background_url})` : "none";
+        document.body.style.backgroundSize = data.bg_size || "cover";
+        document.body.style.backgroundColor = data.bg_color || "#f4f4f4";
+        document.querySelector(".content").style.opacity = data.main_opacity || 1;
+        document.querySelector(".sidebar").style.background = `rgba(44,62,80,${data.sidebar_opacity || 0.85})`;
+      }
+    }
+    loadSettings();
+
+    // === Simpan Pengaturan ===
+    document.getElementById("saveSettings").addEventListener("click", async () => {
+      const updates = {
+        id: 1,
+        nama: document.getElementById("nama").value,
+        deskripsi: document.getElementById("deskripsi").value,
+        kontak: document.getElementById("kontak").value,
+        lokasi: document.getElementById("lokasi").value,
+        bg_opacity: parseFloat(document.getElementById("bgOpacity").value),
+        bg_size: document.getElementById("bgSize").value,
+        sidebar_color: document.getElementById("sidebarColor").value,
+        bg_color: document.getElementById("bgColor").value,
+        main_opacity: parseFloat(document.getElementById("mainOpacity").value),
+        sidebar_opacity: parseFloat(document.getElementById("sidebarOpacity").value)
+      };
+      const { error } = await supabase.from("settings").upsert(updates);
+      alert(error ? "Gagal menyimpan." : "Berhasil disimpan!");
+      if (!error) loadSettings();
+    });
+
+    // === Live Preview Opacity ===
+    document.getElementById("mainOpacity").addEventListener("input", (e) => {
+      document.getElementById("mainOpacityValue").textContent = e.target.value;
+      document.querySelector(".content").style.opacity = e.target.value;
+    });
+    document.getElementById("sidebarOpacity").addEventListener("input", (e) => {
+      document.getElementById("sidebarOpacityValue").textContent = e.target.value;
+      document.querySelector(".sidebar").style.background = `rgba(44,62,80,${e.target.value})`;
+    });
+
+    // === Upload Logo ===
+    document.getElementById("logoInput").addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const path = `logo/${Date.now()}_${file.name}`;
+      const { error } = await supabase.storage.from("assets").upload(path, file, { upsert: true });
+      if (error) return alert("Gagal upload logo");
+      const { data: url } = supabase.storage.from("assets").getPublicUrl(path);
+      await supabase.from("settings").update({ logo_url: url.publicUrl }).eq("id", 1);
+      document.getElementById("logoImg").src = url.publicUrl;
+    });
+
+    // === Upload Background ===
+    document.getElementById("backgroundInput").addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const path = `background/${Date.now()}_${file.name}`;
+      const { error } = await supabase.storage.from("assets").upload(path, file, { upsert: true });
+      if (error) return alert("Gagal upload background");
+      const { data: url } = supabase.storage.from("assets").getPublicUrl(path);
+      await supabase.from("settings").update({ background_url: url.publicUrl }).eq("id", 1);
+      document.body.style.backgroundImage = `url(${url.publicUrl})`;
+    });
+
+    // === Hapus Background ===
+    document.getElementById("removeBackground").addEventListener("click", async () => {
+      await supabase.from("settings").update({ background_url: null }).eq("id", 1);
+      document.body.style.backgroundImage = "none";
+    });
+
+    // === DATA BURUNG ===
+    async function loadBirds(filter = "") {
+      let query = supabase.from("birds").select("*").order("id", { ascending: false });
+      if (filter) query = query.or(`no_ring.ilike.%${filter}%,jenis.ilike.%${filter}%`);
+      const { data } = await query;
+      const tbody = document.querySelector("#birdTable tbody");
+      tbody.innerHTML = "";
+      (data || []).forEach((b) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td contenteditable onblur="updateBird(${b.id}, 'no_ring', this.innerText)">${b.no_ring}</td>
+          <td contenteditable onblur="updateBird(${b.id}, 'jenis', this.innerText)">${b.jenis || ""}</td>
+          <td contenteditable onblur="updateBird(${b.id}, 'gender', this.innerText)">${b.gender || ""}</td>
+          <td contenteditable onblur="updateBird(${b.id}, 'tgl_lahir', this.innerText)">${b.tgl_lahir || ""}</td>
+          <td contenteditable onblur="updateBird(${b.id}, 'indukan_jantan', this.innerText)">${b.indukan_jantan || ""}</td>
+          <td contenteditable onblur="updateBird(${b.id}, 'indukan_betina', this.innerText)">${b.indukan_betina || ""}</td>
+          <td><button onclick="deleteBird(${b.id})"><i class='ri-delete-bin-line'></i></button></td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function updateBird(id, field, value) {
+      await supabase.from("birds").update({ [field]: value }).eq("id", id);
+    }
+
+    async function deleteBird(id) {
+      if (!confirm("Hapus data ini?")) return;
+      await supabase.from("birds").delete().eq("id", id);
+      loadBirds();
+    }
+
+    document.getElementById("addBirdBtn").addEventListener("click", async () => {
+      const noRing = prompt("Masukkan No Ring:");
+      if (!noRing) return;
+      await supabase.from("birds").insert([{ no_ring: noRing }]);
+      loadBirds();
+    });
+
+    document.getElementById("searchInput").addEventListener("input", (e) => {
+      loadBirds(e.target.value);
+    });
+  </script>
+</body>
+</html>
