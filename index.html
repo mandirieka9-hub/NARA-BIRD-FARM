@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Data Burung</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Poppins,sans-serif;
+  background:#f4f4f4;
+  color:#fff;
+  display:flex;
+  min-height:100vh;
+  overflow-x:hidden
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+  width:240px;
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  align-items:center
+}
+.sidebar-logo img{width:100px}
+
+/* OUTER HANYA NAMA */
+.sidebar-name{
+  margin-top:8px;
+  font-weight:700;
+  text-align:center;
+  text-shadow:-1px -1px 0 rgba(0,0,0,.6),
+              1px -1px 0 rgba(0,0,0,.6),
+             -1px  1px 0 rgba(0,0,0,.6),
+              1px  1px 0 rgba(0,0,0,.6)
+}
+.sidebar-desc{font-size:13px;text-align:center;opacity:.9}
+
+.sidebar-links{
+  margin-top:18px;
+  display:flex;
+  flex-direction:column;
+  gap:14px
+}
+.sidebar-links a{
+  width:44px;height:44px;
+  border-radius:50%;
+  background:rgba(255,255,255,.18);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  color:inherit;
+  text-decoration:none
+}
+
+/* ===== CONTENT ===== */
+.content{flex:1;padding:14px}
+.data-section{padding:14px;border-radius:12px}
+#searchInput{
+  width:100%;
+  padding:8px;
+  border-radius:6px;
+  border:none;
+  margin-bottom:10px
+}
+
+/* ===== TABLE ===== */
+table{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed
+}
+th,td{
+  padding:8px;
+  font-size:13px;
+  border-bottom:1px solid rgba(255,255,255,.25);
+  word-break:break-word
+}
+tbody tr{cursor:pointer}
+
+/* ===== POPUP ===== */
+.popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999
+}
+.popup.show{display:flex}
+.popup-content{
+  width:90%;
+  max-width:420px;
+  padding:18px;
+  border-radius:16px
+}
+#closePopup{
+  width:100%;
+  margin-top:10px;
+  padding:10px;
+  border:none;
+  border-radius:8px
+}
+
+/* ===== MOBILE ===== */
+@media(max-width:768px){
+  body{display:block}
+  .sidebar{
+    width:100%;
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    gap:8px;
+    padding:10px
+  }
+  .sidebar-logo img{width:42px}
+  .sidebar-name{font-size:14px;margin:0}
+  .sidebar-desc{font-size:11px}
+  .sidebar>div:nth-child(2){
+    display:flex;
+    flex-direction:column;
+    align-items:center
+  }
+  .sidebar-links{flex-direction:row;gap:6px}
+  .sidebar-links a{
+    width:32px;height:32px;font-size:18px
+  }
+  th,td{font-size:12px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar" id="panelSidebar">
+  <div class="sidebar-logo"><img id="logoImg"></div>
+  <div>
+    <div class="sidebar-name" id="siteName">Nama Situs</div>
+    <div class="sidebar-desc" id="siteDesc"></div>
+  </div>
+  <div class="sidebar-links">
+    <a id="whatsappLink"><i class="ri-whatsapp-fill"></i></a>
+    <a id="mapsLink"><i class="ri-map-pin-2-fill"></i></a>
+  </div>
+</div>
+
+<div class="content">
+  <div class="data-section" id="panelData">
+    <input id="searchInput" placeholder="Cari No Ring / Jenis">
+    <table id="birdTable">
+      <thead><tr><th>No Ring</th><th>Jenis</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="popup" id="birdPopup">
+  <div class="popup-content" id="panelPopup">
+    <h3 id="popupRing"></h3>
+    <p>Jenis: <span id="popupJenis"></span></p>
+    <p>Gender: <span id="popupGender"></span></p>
+    <p>Tgl Lahir: <span id="popupTgl"></span></p>
+    <p>Indukan Jantan: <span id="popupJantan"></span></p>
+    <p>Indukan Betina: <span id="popupBetina"></span></p>
+    <button id="closePopup">Tutup</button>
+  </div>
+</div>
+
+<script>
+const API_URL="https://script.google.com/macros/s/AKfycbw_gyoRvNCsH24ECwwAtOSu85e-wFjBb_CtvvGQAzhI2U46hint_UrUpvzrtPm4e0MQ/exec";
+let birdsCache=[];
+let lastDataHash="";
+
+/* FORMAT TANGGAL DD/MM/YYYY */
+function formatTanggal(v){
+  if(!v)return"-";
+  const d=new Date(v);
+  if(isNaN(d))return v;
+  return String(d.getDate()).padStart(2,"0")+"/"+
+         String(d.getMonth()+1).padStart(2,"0")+"/"+
+         d.getFullYear();
+}
+
+/* SETTINGS */
+async function loadSettings(){
+  const r=await fetch(API_URL+"?type=settings");
+  const s=await r.json();
+
+  siteName.textContent=s.nama||"";
+  siteDesc.textContent=s.deskripsi||"";
+  logoImg.src=s.logo_url||"";
+
+  document.body.style.backgroundColor=s.bg_color||"#f4f4f4";
+
+  [panelSidebar,panelData,panelPopup].forEach(p=>{
+    p.style.backgroundColor=s.panel_color||"#2c3e50";
+    p.style.color=s.text_color||"#ffffff";
+  });
+
+  siteName.style.color=s.title_color||s.text_color||"#ffffff";
+
+  whatsappLink.href="https://wa.me/"+(s.kontak||"");
+  whatsappLink.target="_blank";
+
+  mapsLink.href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(s.lokasi||"");
+  mapsLink.target="_blank";
+}
+
+/* HASH DATA */
+function makeHash(data){
+  return JSON.stringify(data.map(b=>[
+    b.no_ring,b.jenis,b.gender,b.tgl_lahir,b.indukan_jantan,b.indukan_betina
+  ]));
+}
+
+/* LOAD DATA (HANYA UPDATE JIKA BERUBAH) */
+async function loadBirds(){
+  const r=await fetch(API_URL+"?type=birds");
+  const data=await r.json();
+
+  const newHash=makeHash(data);
+  if(newHash===lastDataHash) return; // 🔒 TIDAK ADA PERUBAHAN
+
+  lastDataHash=newHash;
+  birdsCache=data;
+
+  birdsCache.sort((a,b)=>
+    (a.no_ring+"").localeCompare(b.no_ring+"",undefined,{numeric:true})
+  );
+
+  renderBirds(searchInput.value||"");
+}
+
+/* RENDER */
+function renderBirds(k){
+  const tb=birdTable.querySelector("tbody");
+  tb.innerHTML="";
+  k=k.toLowerCase();
+
+  birdsCache.forEach(b=>{
+    if(
+      k===""||
+      (b.no_ring||"").toLowerCase().includes(k)||
+      (b.jenis||"").toLowerCase().includes(k)
+    ){
+      const tr=document.createElement("tr");
+      tr.innerHTML=`<td>${b.no_ring||""}</td><td>${b.jenis||""}</td>`;
+      tr.onclick=()=>showPopup(b);
+      tb.appendChild(tr);
+    }
+  });
+}
+
+searchInput.oninput=()=>renderBirds(searchInput.value);
+
+/* POPUP */
+function showPopup(b){
+  popupRing.textContent=b.no_ring||"-";
+  popupJenis.textContent=b.jenis||"-";
+  popupGender.textContent=b.gender||"-";
+  popupTgl.textContent=formatTanggal(b.tgl_lahir);
+  popupJantan.textContent=b.indukan_jantan||"-";
+  popupBetina.textContent=b.indukan_betina||"-";
+  birdPopup.classList.add("show");
+}
+closePopup.onclick=()=>birdPopup.classList.remove("show");
+
+/* INIT */
+loadSettings();
+loadBirds();
+
+/* AUTO REFRESH – CEK PERUBAHAN (15 DETIK) */
+setInterval(()=>{
+  if(!document.hidden) loadBirds();
+},15000);
+</script>
+
+</body>
+</html>
