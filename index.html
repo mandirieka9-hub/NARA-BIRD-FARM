@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Burung</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+:root{
+  --text-color:#ffffff;
+  --title-color:#ffffff;
+  --panel-color:#2c3e50;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Poppins,sans-serif;
+  background:#f4f4f4;
+  color:var(--text-color);
+  display:flex;
+  min-height:100vh;
+  overflow-x:hidden
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+  width:240px;
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  background:var(--panel-color);
+}
+
+.sidebar-logo{
+  padding:12px;
+  border-radius:20px;
+  background:rgba(255,255,255,.12);
+  box-shadow:0 10px 22px rgba(0,0,0,.35)
+}
+.sidebar-logo img{width:92px}
+
+.sidebar-name{
+  margin-top:12px;
+  font-weight:700;
+  font-size:14px;
+  color:var(--title-color);
+  text-align:center;
+  text-shadow:
+    -1px -1px 0 rgba(0,0,0,.7),
+     1px -1px 0 rgba(0,0,0,.7),
+    -1px  1px 0 rgba(0,0,0,.7),
+     1px  1px 0 rgba(0,0,0,.7)
+}
+
+.sidebar-desc{
+  font-size:12px;
+  text-align:center;
+  opacity:.85;
+  margin-top:6px
+}
+
+.sidebar-links{
+  margin-top:18px;
+  display:flex;
+  gap:14px
+}
+.sidebar-links a{
+  width:42px;height:42px;
+  border-radius:50%;
+  background:rgba(255,255,255,.18);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  color:inherit;
+  text-decoration:none
+}
+
+/* ===== CONTENT ===== */
+.content{flex:1;padding:14px}
+
+.data-section{
+  padding:14px;
+  border-radius:16px;
+  background:var(--panel-color);
+}
+
+/* FILTER */
+.filter-row{
+  display:flex;
+  gap:8px;
+  margin-bottom:10px
+}
+#searchInput,#genderFilter{
+  width:100%;
+  padding:8px;
+  border-radius:8px;
+  border:none
+}
+
+/* ===== TABLE ===== */
+table{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+  color:var(--text-color);
+  border:0.6px solid color-mix(in srgb, currentColor 35%, transparent);
+}
+thead th{
+  position:sticky;
+  top:0;
+  background:rgba(0,0,0,.25)
+}
+th,td{
+  padding:8px;
+  font-size:13px;
+  border:0.6px solid color-mix(in srgb, currentColor 35%, transparent);
+  word-break:break-word
+}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:rgba(255,255,255,.08)}
+
+/* ===== LOADING ===== */
+#loading{
+  text-align:center;
+  padding:20px;
+  opacity:.8
+}
+
+/* ===== POPUP ===== */
+.popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999
+}
+.popup.show{display:flex}
+.popup-content{
+  width:90%;
+  max-width:420px;
+  padding:18px;
+  border-radius:20px;
+  background:var(--panel-color);
+}
+#closePopup{
+  width:100%;
+  margin-top:12px;
+  padding:10px;
+  border:none;
+  border-radius:10px
+}
+
+/* ===== MOBILE ===== */
+@media(max-width:768px){
+  body{display:block}
+  .sidebar{
+    width:100%;
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    gap:8px;
+    padding:10px
+  }
+  .sidebar-logo img{width:48px}
+  .sidebar-name{font-size:13px}
+  .sidebar-desc{font-size:11px}
+  .sidebar-links a{width:32px;height:32px;font-size:18px}
+  th,td{font-size:12px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo"><img id="logoImg"></div>
+  <div>
+    <div class="sidebar-name" id="siteName"></div>
+    <div class="sidebar-desc" id="siteDesc"></div>
+  </div>
+  <div class="sidebar-links">
+    <a id="whatsappLink" target="_blank"><i class="ri-whatsapp-fill"></i></a>
+    <a id="mapsLink" target="_blank"><i class="ri-map-pin-2-fill"></i></a>
+  </div>
+</div>
+
+<div class="content">
+  <div class="data-section">
+    <div class="filter-row">
+      <input id="searchInput" placeholder="Cari No Ring / Jenis">
+      <select id="genderFilter">
+        <option value="">Semua</option>
+        <option value="jantan">Jantan</option>
+        <option value="betina">Betina</option>
+      </select>
+    </div>
+
+    <div id="loading">Memuat data...</div>
+
+    <table id="birdTable" style="display:none">
+      <thead>
+        <tr><th>No Ring</th><th>Jenis</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="popup" id="birdPopup">
+  <div class="popup-content">
+    <h3 id="popupRing"></h3>
+    <p>Jenis: <span id="popupJenis"></span></p>
+    <p>Gender: <span id="popupGender"></span></p>
+    <p>Tgl Lahir: <span id="popupTgl"></span></p>
+    <p>Indukan Jantan: <span id="popupJantan"></span></p>
+    <p>Indukan Betina: <span id="popupBetina"></span></p>
+    <p>Keterangan: <span id="popupKet"></span></p>
+    <button id="closePopup">Tutup</button>
+  </div>
+</div>
+
+<script>
+const API_URL="https://script.google.com/macros/s/AKfycbw_gyoRvNCsH24ECwwAtOSu85e-wFjBb_CtvvGQAzhI2U46hint_UrUpvzrtPm4e0MQ/exec";
+let birdsCache=[],lastHash="",debounceTimer;
+
+function debounce(fn,delay=300){
+  return (...args)=>{
+    clearTimeout(debounceTimer);
+    debounceTimer=setTimeout(()=>fn(...args),delay);
+  }
+}
+
+function formatTanggal(v){
+  if(!v)return"-";
+  const d=new Date(v);
+  return isNaN(d)?v:
+    String(d.getDate()).padStart(2,"0")+"/"+
+    String(d.getMonth()+1).padStart(2,"0")+"/"+d.getFullYear();
+}
+
+async function loadSettings(){
+  const s=await (await fetch(API_URL+"?type=settings")).json();
+
+  siteName.textContent=s.nama||"";
+  siteDesc.textContent=s.deskripsi||"";
+  logoImg.src=s.logo_url||"";
+
+  document.documentElement.style.setProperty("--text-color",s.text_color||"#fff");
+  document.documentElement.style.setProperty("--title-color",s.title_color||s.text_color||"#fff");
+  document.documentElement.style.setProperty("--panel-color",s.panel_color||"#2c3e50");
+
+  document.body.style.backgroundColor=s.bg_color||"#f4f4f4";
+
+  whatsappLink.href="https://wa.me/"+(s.kontak||"");
+  mapsLink.href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(s.lokasi||"");
+}
+
+async function loadBirds(){
+  const d=await (await fetch(API_URL+"?type=birds")).json();
+  const h=JSON.stringify(d);
+  if(h===lastHash)return;
+  lastHash=h;
+
+  birdsCache=d.sort((a,b)=>(a.no_ring+"").localeCompare(b.no_ring+"",undefined,{numeric:true}));
+  loading.style.display="none";
+  birdTable.style.display="table";
+  applyFilter();
+}
+
+function applyFilter(){
+  const tb=document.querySelector("#birdTable tbody");
+  tb.innerHTML="";
+  const k=searchInput.value.toLowerCase();
+  const g=genderFilter.value;
+
+  birdsCache.forEach(b=>{
+    if(
+      (k===""||(b.no_ring||"").toLowerCase().includes(k)||(b.jenis||"").toLowerCase().includes(k)) &&
+      (g===""||(b.gender||"").toLowerCase()===g)
+    ){
+      const tr=document.createElement("tr");
+      tr.innerHTML=`<td>${b.no_ring||""}</td><td>${b.jenis||""}</td>`;
+      tr.onclick=()=>showPopup(b);
+      tb.appendChild(tr);
+    }
+  });
+}
+
+const debouncedFilter = debounce(applyFilter,300);
+searchInput.addEventListener("input",debouncedFilter);
+genderFilter.addEventListener("change",debouncedFilter);
+
+function showPopup(b){
+  popupRing.textContent=b.no_ring||"-";
+  popupJenis.textContent=b.jenis||"-";
+  popupGender.textContent=b.gender||"-";
+  popupTgl.textContent=formatTanggal(b.tgl_lahir);
+  popupJantan.textContent=b.indukan_jantan||"-";
+  popupBetina.textContent=b.indukan_betina||"-";
+  popupKet.textContent=b.keterangan||"-";
+  birdPopup.classList.add("show");
+}
+closePopup.onclick=()=>birdPopup.classList.remove("show");
+
+loadSettings();
+loadBirds();
+setInterval(()=>{if(!document.hidden)loadBirds()},15000);
+</script>
+
+</body>
+</html>
