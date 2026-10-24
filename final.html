@@ -1,0 +1,763 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pengelolaan Data Fake & Asli</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#687386;--line:#e4e9f1;--primary:#4355db;--primary2:#3343bf;--fake:#e97836;--real:#16866a;--danger:#c43d4b;--shadow:0 10px 30px rgba(25,40,75,.07)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:linear-gradient(120deg,#222e68,#4355db);color:white;padding:24px max(20px,calc((100vw - 1180px)/2));}
+.main-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:16px}.main-tab{border:1px solid var(--line);background:#fff;color:#4b5568;border-radius:12px;padding:12px 10px;font-weight:800;cursor:pointer;font:inherit;font-weight:800}.main-tab.active{background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 5px 14px #4355db33}.main-slide{display:none}.main-slide.active{display:block}.future-placeholder{min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 18px;background:#fff;border:1px dashed #cbd3e2;border-radius:16px;color:var(--muted)}.future-placeholder h1{color:var(--ink);margin:0 0 8px;font-size:24px}.future-placeholder p{margin:0;max-width:420px}
+@media(max-width:600px){.main-tabs{gap:5px;margin-bottom:10px}.main-tab{padding:10px 3px;font-size:12px;border-radius:9px}.future-placeholder{min-height:180px;padding:22px 12px}.future-placeholder h1{font-size:20px}}
+.header-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.brand{font-weight:800;font-size:22px;letter-spacing:.2px}.brand small{display:block;font-weight:500;font-size:12px;opacity:.8}
+.status{font-size:12px;border:1px solid #ffffff55;border-radius:999px;padding:6px 10px}
+main{max-width:1180px;margin:0 auto;padding:22px 18px 50px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.tab{border:1px solid var(--line);background:#fff;color:#4b5568;border-radius:12px;padding:11px 16px;font-weight:700;cursor:pointer}.tab.active{background:var(--primary);border-color:var(--primary);color:white;box-shadow:0 5px 14px #4355db33}
+.page{display:none}.page.active{display:block}.page-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:0 0 18px}.page-heading h1{font-size:25px;margin:0 0 4px}.page-heading p{margin:0;color:var(--muted)}#page3 .page-heading{align-items:center}#page3 .page-heading>div{min-width:0}#page3 .page-heading .global-cart-mode{flex:none;margin-left:auto}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:18px;box-shadow:var(--shadow);min-width:0}.span-12{grid-column:span 12}.span-7{grid-column:span 12}.span-5{grid-column:span 12}.span-6{grid-column:span 12}
+.card h2{font-size:17px;margin:0 0 14px}.setup-list-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:13px;font-weight:700;color:#4c5669}.field input,.search-input,.number-input{width:100%;border:1px solid #d8deea;border-radius:10px;padding:11px 12px;background:#fff;color:var(--ink);font:inherit;outline:none}.field input:focus,.search-input:focus,.number-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px #4355db18}
+.btn{border:0;border-radius:10px;padding:10px 14px;font:inherit;font-weight:750;cursor:pointer;transition:.15s}.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary2)}.btn-light{background:#eef1f8;color:#34405a}.btn-danger{background:#fff0f1;color:var(--danger)}.btn-small{padding:7px 10px;font-size:13px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+.note{font-size:12px;color:var(--muted);margin-top:10px}.empty{padding:30px 14px;text-align:center;color:var(--muted)}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}table{border-collapse:collapse;width:100%;min-width:720px;background:white}th,td{padding:12px 13px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}th{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#647087;background:#f8f9fc}tr:last-child td{border-bottom:0}td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}.item-name{font-weight:750}.subtext{font-size:12px;color:var(--muted)}.tag{display:inline-flex;padding:4px 8px;border-radius:7px;font-size:11px;font-weight:800}.tag.fake{background:#fff0e6;color:#b9571d}.tag.asli{background:#e3f7f0;color:#117357}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px}.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px}.stat .label{font-size:12px;color:var(--muted);font-weight:700}.stat .value{font-size:23px;font-weight:850;margin-top:3px;overflow-wrap:anywhere}.stat .hint{font-size:12px;color:var(--muted)}.money{font-weight:800;font-variant-numeric:tabular-nums}.fake-text{color:var(--fake)}.real-text{color:var(--real)}
+.search-columns{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}.category-switch{display:flex;gap:5px;margin:0 0 14px;padding:4px;background:#f0f2f6;border:1px solid #e0e5ed;border-radius:12px;max-width:420px}.category-choice{display:flex;align-items:center;justify-content:center;gap:8px;flex:1;min-height:42px;padding:8px 14px;border:1px solid transparent;border-radius:9px;background:transparent;color:#596579;font:inherit;font-size:14px;font-weight:750;cursor:pointer;transition:background .15s,border-color .15s,color .15s}.category-choice .choice-symbol{display:inline-grid;place-items:center;width:9px;height:9px;border-radius:50%;font-size:0;background:#b7bfcc}.category-choice.fake.active{background:#fff;border-color:#f0c6a9;color:#a34d1b;box-shadow:0 1px 3px #1720330d}.category-choice.asli.active{background:#fff;border-color:#b8e2d2;color:#126b50;box-shadow:0 1px 3px #1720330d}.category-choice.fake.active .choice-symbol{background:var(--fake);box-shadow:0 0 0 3px #fff0e6}.category-choice.asli.active .choice-symbol{background:var(--real);box-shadow:0 0 0 3px #e3f7f0}.category-choice:focus-visible{outline:3px solid #4355db66;outline-offset:2px}.search-panel.category-hidden{display:none}.search-wrap{position:relative}.search-row{display:flex;gap:8px;align-items:center}.search-row .search-input{min-width:0}.clear-search{border:1px solid var(--line);background:#fff;color:#687386;border-radius:10px;width:42px;height:43px;font-size:20px;font-weight:800;cursor:pointer}.search-popup{position:absolute;z-index:20;left:0;right:0;top:calc(100% + 5px);max-height:340px;overflow:auto;background:#fff;border:1px solid #dce2ec;border-radius:12px;box-shadow:0 16px 35px #17203322;padding:9px}.search-popup[hidden]{display:none}.search-popup .result-item{margin-bottom:8px}.search-popup .result-item:last-child{margin-bottom:0}.history-btn{border:0;background:transparent;color:var(--primary);font-weight:800;cursor:pointer;padding:0;text-decoration:underline;text-decoration-style:dotted}.history-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}.history-chip{display:inline-flex;border-radius:7px;background:#edf1fb;padding:3px 7px;font-size:12px;font-weight:750}.qty-history-cell{white-space:normal}.qty-history-cell .history-popover{display:none}.floating-popup{position:fixed;z-index:2000;max-width:min(340px,calc(100vw - 24px));min-width:210px;max-height:55vh;overflow:auto;padding:12px;background:#fff;border:1px solid #d9e0ee;border-radius:12px;box-shadow:0 16px 40px #17203330;font-size:12px;line-height:1.45}.floating-popup[hidden]{display:none}.floating-popup .popup-head{font-weight:850;font-size:13px;margin-bottom:7px;display:flex;justify-content:space-between;gap:12px}.floating-popup .popup-close{border:0;background:#eef1f8;border-radius:6px;padding:1px 7px;cursor:pointer;font-weight:800}.floating-popup .popup-chips{display:flex;gap:5px;flex-wrap:wrap}.floating-popup .popup-chip{background:#edf1fb;border-radius:7px;padding:3px 6px;font-weight:750}.diff-summary-link{border:0;background:transparent;color:var(--primary);font:inherit;font-weight:800;text-decoration:underline;text-decoration-style:dotted;cursor:pointer;padding:0}.history-popover .history-title{font-weight:800;margin-bottom:4px}.history-popover .history-chips{display:flex;gap:4px;flex-wrap:wrap}.history-popover .history-chip{font-size:11px;padding:2px 5px}.diff-list{display:flex;flex-direction:column;gap:8px}.diff-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;border:1px solid var(--line);border-radius:11px;padding:11px 12px;background:#fff}.diff-name{font-weight:800;overflow-wrap:anywhere}.diff-qty{font-size:12px;color:var(--muted);margin-top:2px}.diff-badge{padding:5px 8px;border-radius:8px;font-size:12px;font-weight:800;white-space:nowrap}.diff-badge.fake{background:#fff0e6;color:#b9571d}.diff-badge.asli{background:#e3f7f0;color:#117357}.save-feedback{font-size:12px;font-weight:750;color:#16866a;min-height:18px;margin-top:8px}.save-feedback:empty{display:none}.fake-cell{background:#fff5ed}.asli-cell{background:#e9f8f2}.fake-head{background:#fbe1ce!important;color:#984515!important}.asli-head{background:#d4f0e5!important;color:#116348!important}.sticky-summary{position:sticky;top:10px;z-index:15;background:#fff;box-shadow:0 8px 22px rgba(25,40,75,.12)}.bottom-totals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.bottom-total{border:1px solid var(--line);border-radius:12px;padding:14px}.bottom-total.fake{background:#fff5ed;border-color:#f4d5bf}.bottom-total.asli{background:#e9f8f2;border-color:#c9e9dc}.bottom-total .label{font-size:12px;font-weight:750;color:var(--muted)}.bottom-total .value{font-size:20px;font-weight:850;margin-top:3px}.difference{font-size:13px;color:var(--muted);margin-top:5px}.search-panel{position:relative;border-radius:17px;background:white;border:1px solid var(--line);box-shadow:var(--shadow);overflow:visible}.search-panel:focus-within{z-index:30}.search-panel-head{border-radius:16px 16px 0 0}.search-panel-head{padding:13px 16px;color:#283247;border-bottom:1px solid var(--line);background:#fafbfc}.search-panel.fake .search-panel-head{border-left:4px solid var(--fake)}.search-panel.asli .search-panel-head{border-left:4px solid var(--real)}.search-panel-head h2{margin:0;font-size:16px}.search-panel-head p{margin:3px 0 0;font-size:12px;color:var(--muted)}.search-body{padding:16px}.results{display:flex;flex-direction:column;gap:10px;margin-top:12px}.result-item{border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center}.result-item .name{font-weight:800;overflow-wrap:anywhere}.result-item .price{font-size:12px;color:var(--muted);margin-top:2px}.quantity{display:flex;align-items:center;gap:5px}.qty-btn{width:32px;height:34px;border:0;border-radius:9px;background:#eef1f8;color:#27334a;font-size:19px;font-weight:800;cursor:pointer}.qty-btn:hover{background:#dfe5f2}.number-input{width:100%;min-width:0;text-align:center;padding:8px 4px;font-weight:800}.unit-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}.unit-box{min-width:0;border:1px solid var(--line);border-radius:10px;padding:8px;background:#fafbfe}.unit-box label{display:block;font-size:12px;font-weight:800;text-align:center;margin-bottom:6px}.unit-controls{display:flex;gap:4px;margin-top:5px}.unit-controls .qty-btn{flex:1;width:auto;height:30px}.unit-controls button:disabled{opacity:.35;cursor:not-allowed}.unit-help{font-size:10px;line-height:1.3;color:var(--muted);text-align:center;margin-top:4px}.result-item{grid-template-columns:minmax(0,1fr)}.result-footer{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:13px}
+.settings-box{background:#f8f9fc;border:1px solid var(--line);border-radius:12px;padding:13px;margin-top:14px}.settings-box label{font-size:13px;font-weight:700}.settings-box input{margin-top:7px;width:100%;padding:9px;border:1px solid #d8deea;border-radius:9px}
+
+/* Perbaikan: edit langsung di baris item, keranjang input, dan layout ponsel */
+.inline-edit-input{width:100%;min-width:105px;padding:8px;border:1px solid #d8deea;border-radius:8px;font:inherit;font-size:13px;background:#fff;color:var(--ink)}
+.inline-actions{display:flex;gap:5px;justify-content:flex-end;flex-wrap:wrap}
+.cart-row-actions{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:9px}
+.cart-mode{min-width:0;max-width:125px;padding:8px;border:1px solid #d8deea;border-radius:9px;background:#fff;color:var(--ink);font:inherit;font-size:12px}
+.cart-action{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:10px;padding:9px 13px;background:var(--primary);color:#fff;font:inherit;font-weight:800;cursor:pointer;white-space:nowrap}
+.cart-action svg{width:18px;height:18px;flex:none}.history-operator{font-weight:900;color:var(--muted);padding:0 1px}
+.search-popup .result-item{display:block}
+@media(max-width:600px){
+ main{padding:10px 9px 24px}.tabs{gap:5px;margin-bottom:12px}.tab{padding:9px 5px;font-size:12px;border-radius:9px}
+ #page3 .page-heading{margin-bottom:9px}#page3 .page-heading h1{font-size:19px}#page3 .page-heading p{display:none}
+ .category-switch{position:sticky;top:0;z-index:40;max-width:none;margin:0 0 8px;padding:3px;border-radius:10px;box-shadow:0 3px 10px #17203312;background:#f0f2f6}
+ .category-choice{min-height:36px;padding:5px 8px;font-size:13px}
+ .search-panel{border-radius:12px;box-shadow:none}.search-panel-head{display:none}.search-body{padding:9px}.save-feedback{margin:0 0 5px;min-height:0}.search-input{font-size:16px!important;padding:10px!important}.clear-search{height:40px;width:38px;flex:none}
+ .search-popup{position:static;max-height:none}
+ .search-popup .result-item{padding:9px;margin-bottom:6px;gap:7px}.result-item .name{font-size:14px}.result-item .price{font-size:11px}
+ .unit-grid{gap:5px;margin-top:8px}.unit-box{padding:5px 4px}.unit-box label{font-size:11px;margin-bottom:4px}.unit-input{font-size:16px!important;padding:8px 3px!important;min-height:38px}.unit-help{font-size:9px}.cart-row-actions{margin-top:7px}.cart-mode{padding:7px 5px;font-size:11px;max-width:112px}.cart-action{padding:8px 10px;font-size:12px}
+ .sticky-summary{position:static;top:auto;box-shadow:none;padding:10px;margin-bottom:10px!important}.sticky-summary h2{font-size:15px;margin-bottom:8px}.bottom-totals{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.bottom-total{padding:7px 5px;border-radius:9px;min-width:0}.bottom-total .label{font-size:10px;line-height:1.25}.bottom-total .value{font-size:13px;line-height:1.25;overflow-wrap:anywhere}.bottom-total .difference{font-size:9px;line-height:1.25;margin-top:4px;overflow-wrap:anywhere}.diff-summary-link{font-size:11px;text-align:left}
+}
+
+/* Layout Slide 3: sidebar kategori + pencarian di kiri, hasil di kanan */
+#page3 .search-workspace{display:grid;grid-template-columns:200px minmax(0,1fr);gap:14px;align-items:start}
+#page3 .search-sidebar{position:sticky;top:12px;min-width:0}
+#page3 .search-sidebar .category-switch{max-width:none;flex-direction:column}
+#page3 .search-sidebar .category-choice{justify-content:flex-start}
+#page3 .search-sidebar .search-panel{display:none!important}
+#page3 .search-sidebar .search-panel.active-search{display:block!important}
+#page3 .search-results-area{min-width:0;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;min-height:240px;box-shadow:var(--shadow)}
+#page3 .search-results-area h2{font-size:17px;margin:0 0 10px}
+#page3 .search-results-area .search-popup{position:static!important;display:flex;flex-direction:column;gap:10px;max-height:none!important;overflow:visible;border:0;box-shadow:none;padding:0;margin:0;background:transparent}
+#page3 .search-results-area .search-popup[hidden]{display:none!important}
+#page3 .search-results-area .result-item{grid-template-columns:minmax(0,1fr);align-items:stretch}
+#page3 .result-item-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;min-width:0}
+#page3 .result-item-title{min-width:0}
+#page3 .result-name-line{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:0}
+#page3 .item-inline-feedback{font-size:11px;font-weight:800;color:#16866a;line-height:1.2}
+#page3 .item-inline-feedback:empty{display:none}
+#page3 .cart-slot{display:flex;align-items:center;justify-content:center;min-width:0;padding-top:18px}
+#page3 .cart-slot .cart-icon-only{width:100%;max-width:44px;height:40px}
+#page3 .cart-icon-only{width:40px;height:40px;flex:none;padding:8px;border-radius:10px}
+#page3 .cart-icon-only svg{width:22px;height:22px}
+#page3 .unit-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+#page3 .unit-controls .qty-btn{height:30px;width:100%;padding:0}
+#page3 .search-results-area .unit-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+#page3 .search-sidebar .search-body{padding:12px}
+#page3 .search-sidebar .search-wrap{position:static}
+#page3 .search-sidebar .search-popup{display:none!important}
+#page3 .search-results-area .empty{padding:45px 16px}
+@media(max-width:800px){#page3 .search-workspace{grid-template-columns:150px minmax(0,1fr);gap:9px}#page3 .search-sidebar{position:sticky;top:8px;align-self:start;z-index:25}#page3 .search-sidebar .category-switch{flex-direction:row}#page3 .search-sidebar .category-choice{justify-content:center}#page3 .search-results-area{padding:10px;min-height:120px}}
+@media(max-width:600px){#page3 .search-workspace{grid-template-columns:118px minmax(0,1fr);gap:7px}#page3 .search-sidebar .category-switch{flex-direction:column;gap:3px}#page3 .search-sidebar .category-choice{justify-content:flex-start;padding:6px 7px;min-height:32px;font-size:12px}#page3 .search-sidebar .search-body{padding:6px}#page3 .search-sidebar .search-input{padding:9px 7px!important;font-size:14px!important}#page3 .clear-search{width:27px;height:34px;font-size:17px}#page3 .search-results-area{padding:7px}#page3 .search-sidebar{position:sticky;top:8px;align-self:start;z-index:25}#page3 .search-results-area h2{font-size:14px}#page3 .search-results-area .search-popup{position:static!important;max-height:none!important}#page3 .search-results-area .result-item{padding:8px;margin-bottom:0}#page3 .unit-box{padding:4px 3px}#page3 .unit-input{padding:7px 2px!important;min-height:34px}#page3 .unit-controls .qty-btn{height:27px;font-size:16px}#page3 .cart-icon-only{width:34px;height:34px;padding:6px}#page3 .cart-slot{padding-top:16px}#page3 .cart-slot .cart-icon-only{width:100%;max-width:34px;height:34px}#page3 .cart-icon-only svg{width:19px;height:19px}#page3 .cart-row-actions{flex-wrap:wrap}#page3 .cart-mode{max-width:100px}}
+
+
+/* Perbaikan tampilan Slide 3 dan ringkasan total */
+#page3 .results-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 10px}
+#page3 .search-results-area h2{margin:0;font-size:17px}
+#page3 .results-toolbar-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap;min-width:0}
+#page3 .results-toolbar .save-feedback{margin:0;min-height:0;white-space:normal}
+#page3 .results-toolbar .save-feedback:empty{display:none}
+#page3 .global-cart-mode{max-width:none;min-width:132px;font-size:13px;padding:8px 9px}
+#page3 .unit-input{font-variant-numeric:tabular-nums}
+@media(max-width:600px){#page3 .results-toolbar{align-items:flex-start;gap:6px;margin-bottom:8px}#page3 .search-results-area h2{font-size:13px;flex:1;min-width:0}#page3 .results-toolbar-actions{gap:5px;justify-content:flex-start;width:100%}#page3 .global-cart-mode{font-size:11px;padding:6px 5px;min-width:100px;max-width:112px}#page3 .results-toolbar .save-feedback{font-size:10px;line-height:1.25;flex:1}#page3 .bottom-total .difference{display:none}}
+
+.data-management-footer{margin-top:20px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#f8f9fc}.data-management-label{font-size:12px;font-weight:800;color:var(--muted)}.summary-detail-heading{margin-bottom:0}.summary-detail-heading h2{font-size:17px!important;margin:0!important}.summary-detail-heading .btn{flex:none}
+@media(max-width:600px){.data-management-footer{margin-top:14px;padding:9px}.data-management-footer .actions{gap:6px}.data-management-footer .btn{padding:8px 9px;font-size:11px}.summary-detail-heading h2{font-size:15px!important}.summary-detail-heading .btn{padding:6px 8px;font-size:11px}}
+
+/* Real & Fake Slide 3: pencarian dibuka sebagai panel melayang yang dapat digeser */
+#page3 .search-launcher{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;width:100%;min-height:42px;padding:6px 4px;border:1px solid #dce2ef;border-radius:13px;background:#fff;color:#4355db;font:inherit;font-size:12px;font-weight:800;cursor:pointer;box-shadow:0 4px 12px #1720330b}
+#page3 .search-launcher svg{width:22px;height:22px}
+#page3 .search-launcher span{display:none}
+#page3 .search-launcher:active{transform:scale(.98)}
+#page3 .search-launcher[aria-expanded="true"]{background:#eef0ff;border-color:#aeb7fb}
+#page3 .floating-search-window{position:fixed;z-index:10000;left:10px;top:115px;width:min(270px,calc(100vw - 20px));max-height:55vh;overflow:auto;background:#fff;border:1px solid #cfd7e7;border-radius:14px;box-shadow:0 18px 50px #11182745;overscroll-behavior:contain}
+#page3 .floating-search-window[hidden]{display:none!important}
+#page3 .floating-search-titlebar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:6px;padding:6px 8px;background:#3444bd;color:#fff;cursor:move;touch-action:none;user-select:none}
+#page3 .floating-search-titlebar strong{font-size:12px;flex:1}
+#page3 .floating-search-grip{font-size:20px;line-height:1;opacity:.85}
+#page3 .floating-search-close{border:0;border-radius:7px;background:#ffffff24;color:#fff;font-size:22px;line-height:1;padding:0 7px;cursor:pointer}
+#page3 .floating-search-content{padding:6px}
+#page3 .floating-search-content .search-panel{display:none!important;border-radius:9px;box-shadow:none}
+#page3 .floating-search-content .search-panel.active-search{display:block!important}
+#page3 .floating-search-content .search-body{padding:0}
+#page3 .floating-search-content .search-row{gap:5px}
+#page3 .floating-search-content .search-input{font-size:16px!important;padding:10px!important;min-width:0}
+#page3 .floating-search-content .clear-search{width:36px;height:40px;flex:none}
+@media(max-width:600px){#page3 .search-launcher{min-height:38px;padding:5px 3px}#page3 .search-launcher svg{width:21px;height:21px}#page3 .floating-search-window{width:min(270px,calc(100vw - 20px));max-height:55vh}}
+
+footer{text-align:center;color:var(--muted);font-size:12px;padding:16px}
+@media(max-width:800px){.span-7,.span-5,.span-6{grid-column:span 12}.search-columns{grid-template-columns:minmax(0,1fr)}.stats{grid-template-columns:1fr 1fr}.page-heading h1{font-size:22px}}
+@media(max-width:480px){.unit-grid{gap:5px}.unit-box{padding:6px 4px}.unit-box label{font-size:11px}.unit-controls .qty-btn{height:29px;font-size:17px}main{padding:16px 12px 35px}.card{padding:14px}.field-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.stat .value{font-size:21px}.brand{font-size:19px}.tab{flex:1;padding:10px 8px;font-size:13px}}
+
+/* Ringkasan Slide 2 dibuat satu baris, ringkas di desktop maupun HP */
+#page2 .compact-summary{padding:10px 12px;box-shadow:none;border-radius:12px}
+#page2 .compact-summary h2{font-size:14px;margin:0 0 7px}
+#page2 .compact-summary .bottom-totals{gap:7px}
+#page2 .compact-summary .bottom-total{padding:7px 9px;border-radius:9px;display:flex;align-items:center;justify-content:space-between;gap:7px;min-width:0}
+#page2 .compact-summary .bottom-total .label{font-size:11px;white-space:nowrap}
+#page2 .compact-summary .bottom-total .value{font-size:15px;line-height:1.2;margin:0;white-space:nowrap}
+#page2 .qty-difference-compact{margin-top:7px!important;padding-top:6px!important;border-top:1px solid var(--line);line-height:1.25}
+#page2 .qty-difference-compact .diff-summary-link{font-size:11px;text-align:left}
+@media(max-width:600px){
+ #page2 .compact-summary{padding:8px;margin-bottom:8px!important}
+ #page2 .compact-summary h2{font-size:12px;margin-bottom:5px}
+ #page2 .compact-summary .bottom-totals{gap:4px}
+ #page2 .compact-summary .bottom-total{padding:6px 5px;display:block;border-radius:7px}
+ #page2 .compact-summary .bottom-total .label{font-size:9px;line-height:1.15;white-space:normal}
+ #page2 .compact-summary .bottom-total .value{font-size:11px;line-height:1.2;margin-top:3px;white-space:normal;overflow-wrap:anywhere}
+ #page2 .qty-difference-compact{margin-top:5px!important;padding-top:5px!important}
+ #page2 .qty-difference-compact .diff-summary-link{font-size:10px}
+}
+
+
+/* Slide 1: daftar item dibuat ringkas di HP tanpa geser horizontal */
+@media(max-width:600px){
+ #page1 .page-heading{margin-bottom:10px}
+ #page1 .page-heading h1{font-size:19px}
+ #page1 .page-heading p{font-size:12px;line-height:1.3}
+ #page1 .grid{gap:10px}
+ #page1 .card{padding:11px;border-radius:12px}
+ #page1 .card h2{font-size:15px;margin-bottom:9px}
+ #page1 .setup-list-heading{gap:6px;align-items:center}
+ #page1 .setup-list-heading .btn{padding:6px 8px;font-size:11px}
+ #page1 .actions{gap:5px;margin-top:9px!important}
+ #page1 .actions .btn{padding:7px 8px;font-size:11px}
+ #page1 .note{font-size:10px;line-height:1.35;margin-top:7px}
+ #page1 .field{gap:4px}
+ #page1 .field label{font-size:11px}
+ #page1 .field input{padding:8px;font-size:14px}
+ #page1 .table-wrap{overflow:visible;border:0;border-radius:0}
+ #page1 .table-wrap table{width:100%;min-width:0;table-layout:fixed;border-collapse:separate;border-spacing:0 5px;background:transparent}
+ #page1 .table-wrap thead{display:none}
+ #page1 .table-wrap tbody{display:block;width:100%}
+ #page1 .table-wrap tr{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:0 7px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 2px 6px #17203308;padding:5px 7px;margin:0}
+ #page1 .table-wrap td{display:block;min-width:0;padding:2px 0;border:0;background:transparent;text-align:left;font-size:12px;overflow-wrap:anywhere}
+ #page1 .table-wrap td:first-child{grid-column:1;grid-row:1}
+ #page1 .table-wrap td:nth-child(2){grid-column:1;grid-row:2;font-size:11px;color:#4c5669}
+ #page1 .table-wrap td:nth-child(2)::before{content:'Harga ';color:var(--muted);font-weight:600}
+ #page1 .table-wrap td:nth-child(3){grid-column:1;grid-row:3;font-size:10px;color:var(--muted)}
+ #page1 .table-wrap td:nth-child(3)::before{content:'Isi/karton ';font-weight:600}
+ #page1 .table-wrap td:nth-child(4){grid-column:2;grid-row:1 / span 3;align-self:center;white-space:nowrap;text-align:right}
+ #page1 .table-wrap td:nth-child(4) .btn{padding:5px 7px;font-size:10px;border-radius:7px}
+ #page1 .table-wrap .item-name{font-size:13px;line-height:1.25;display:block}
+ #page1 .table-wrap .subtext{font-size:9px;line-height:1.2}
+ #page1 .table-wrap .inline-edit-row{grid-template-columns:minmax(0,1fr)}
+ #page1 .table-wrap .inline-edit-row td{grid-column:1!important;grid-row:auto!important;padding:3px 0}
+ #page1 .table-wrap .inline-edit-row td:nth-child(2)::before,#page1 .table-wrap .inline-edit-row td:nth-child(3)::before{display:block;margin-bottom:2px}
+ #page1 .table-wrap .inline-edit-row td:nth-child(4){text-align:left;white-space:normal}
+ #page1 .inline-edit-input{width:100%;min-width:0;padding:7px!important;font-size:13px!important}
+ #page1 .inline-actions{display:flex;gap:5px;flex-wrap:wrap}
+}
+
+
+/* Ringkasan Slide 2 lebih ringkas untuk layar HP */
+#page2 #summaryTable .table-wrap{overflow-x:hidden}
+#page2 #summaryTable table{min-width:0;width:100%;table-layout:fixed}
+#page2 #summaryTable th,#page2 #summaryTable td{padding:8px 7px;font-size:12px}
+#page2 #summaryTable th{font-size:10px;letter-spacing:0;text-transform:none;line-height:1.15}
+#page2 #summaryTable th:first-child,#page2 #summaryTable td:first-child{width:27%;text-align:left;overflow-wrap:anywhere}
+#page2 #summaryTable th:nth-child(2),#page2 #summaryTable td:nth-child(2),#page2 #summaryTable th:nth-child(4),#page2 #summaryTable td:nth-child(4){width:13%;}
+#page2 #summaryTable th:nth-child(3),#page2 #summaryTable td:nth-child(3),#page2 #summaryTable th:nth-child(5),#page2 #summaryTable td:nth-child(5){width:23.5%;}
+#page2 #summaryTable .money{overflow-wrap:anywhere;word-break:break-word}
+@media(max-width:600px){
+ #page2 #summaryTable th,#page2 #summaryTable td{padding:6px 3px;font-size:10px;line-height:1.2}
+ #page2 #summaryTable th{font-size:9px}
+ #page2 #summaryTable .item-name{font-size:10px;line-height:1.2}
+ #page2 #summaryTable .history-btn{font-size:10px;line-height:1.2;white-space:normal}
+ #page2 #summaryTable .money{font-size:9px;letter-spacing:-.2px}
+}
+
+
+/* Beranda dan navigasi antar-modul */
+.home-screen{display:none;max-width:900px;margin:24px auto 30px}
+.home-screen.active{display:block}
+.home-intro{text-align:center;padding:20px 12px 24px}
+.home-intro h1{font-size:clamp(25px,4vw,34px);margin:0 0 8px;color:var(--ink)}
+.home-intro p{margin:0;color:var(--muted);font-size:15px}
+.home-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.home-card{appearance:none;width:100%;min-height:190px;border:1px solid var(--line);border-radius:18px;background:#fff;padding:24px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;cursor:pointer;box-shadow:var(--shadow);transition:transform .15s,border-color .15s}
+.home-card:hover{transform:translateY(-2px);border-color:var(--primary)}
+.home-icon{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:#eef0ff;color:var(--primary);font-size:27px;font-weight:800}
+.home-card strong{font-size:19px;color:var(--ink)}
+.home-card span:last-child{font-size:13px;color:var(--muted);line-height:1.4}
+.header-row{position:relative}.header-actions{display:flex;align-items:center;gap:10px;margin-left:auto}.header-module-title{display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);margin:0;color:#fff;font-size:23px;line-height:1.2;font-weight:850;text-align:center;white-space:nowrap;pointer-events:none}#appHeader.module-mode .brand{visibility:hidden}#appHeader.module-mode .header-module-title{display:block}
+.home-button{display:none;border:0;border-radius:10px;background:var(--primary);color:#fff;padding:9px 13px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap}
+.home-button.visible{display:inline-flex;align-items:center;gap:6px}
+.module-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px}.module-head .module-title{font-size:21px;margin:0}.clean-module-btn{border:0;border-radius:9px;background:#fff0f1;color:var(--danger);padding:7px 10px;font:inherit;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap}.clean-module-btn:active{transform:scale(.98)}
+.module-placeholder{max-width:900px;margin:24px auto}
+.module-shell{max-width:900px;margin:10px auto 24px;min-width:0}.module-title{margin:0 0 5px;font-size:25px}.module-subtitle{margin:0 0 18px;color:var(--muted)}
+.laba-layout{display:grid;grid-template-columns:minmax(0,1fr) 1px minmax(0,1fr);gap:22px;align-items:stretch}.laba-divider{background:var(--line);width:1px}.laba-panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow);min-width:0}.laba-panel h2{font-size:17px;margin:0 0 14px}.laba-entry-form{display:flex;gap:8px;align-items:stretch}.laba-entry-form input{width:100%;min-width:0;border:1px solid #d8deea;border-radius:10px;padding:11px 12px;font:inherit;outline:none}.laba-entry-form input:focus{border-color:var(--primary);box-shadow:0 0 0 3px #4355db18}.laba-add{flex:0 0 46px;border:0;border-radius:10px;background:var(--primary);color:#fff;font-size:25px;font-weight:800;cursor:pointer}.laba-number-list{display:flex;flex-direction:column;gap:8px}.laba-number-row{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);border-radius:10px;padding:10px 12px}.laba-number-value{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.laba-remove{border:0;background:#fff0f1;color:var(--danger);border-radius:8px;padding:5px 9px;font-weight:800;cursor:pointer}.laba-total{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;align-items:center}.laba-total span{color:var(--muted);font-weight:700}.laba-total strong{font-size:22px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.cek-search{margin-bottom:14px}.cek-list{display:flex;flex-direction:column;gap:8px}.cek-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:10px 11px;min-width:0}.cek-row-name{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0}.cek-item-name{font-weight:800;overflow-wrap:anywhere;min-width:0}.cek-stat{min-width:0;background:#f8f9fc;border-radius:8px;padding:7px 6px}.cek-stat-label{font-size:10px;color:var(--muted);line-height:1.2;margin-bottom:3px}.cek-stat-value{font-size:12px;font-weight:850;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.cek-item-total{font-weight:850;text-align:left;white-space:normal;font-variant-numeric:tabular-nums}.cek-total{margin-top:14px;padding:15px 16px;border-radius:12px;background:#eef1ff;border:1px solid #d9defe;display:flex;justify-content:space-between;gap:12px;align-items:center}.cek-total span{font-weight:750;color:#455078}.cek-total strong{font-size:22px;font-weight:900;text-align:right;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+@media(max-width:600px){.module-placeholder{min-height:180px;padding:22px 12px}.module-placeholder h1{font-size:20px}.module-shell{margin:4px auto 18px}.module-title{font-size:22px}.module-subtitle{font-size:13px;margin-bottom:13px}.laba-layout{grid-template-columns:minmax(0,1fr) 1px minmax(0,1fr);gap:6px;align-items:stretch}.laba-divider{width:1px;height:auto;min-height:100%;align-self:stretch}.laba-panel{padding:8px 7px;border-radius:11px;box-shadow:none}.laba-panel h2{font-size:13px;line-height:1.25;margin-bottom:8px}.laba-entry-form{gap:4px}.laba-entry-form input{padding:9px 5px;font-size:14px;min-width:0}.laba-add{flex-basis:30px;font-size:20px;border-radius:8px}.laba-number-list{gap:5px}.laba-number-row{padding:7px 5px;gap:4px;border-radius:8px}.laba-number-value{font-size:13px}.laba-remove{padding:3px 6px;font-size:12px}.laba-total{margin-top:8px;padding-top:8px;gap:4px;align-items:flex-start;flex-direction:column}.laba-total span{font-size:11px}.laba-total strong,.cek-total strong{font-size:15px;line-height:1.3}.cek-row{padding:11px 12px;gap:6px 10px}.cek-item-total{font-size:14px}}
+@media(max-width:600px){.module-head{margin-bottom:8px;gap:6px}.module-head .module-title{font-size:17px}.clean-module-btn{font-size:10px;padding:6px 8px}.cek-row{padding:7px;gap:5px}.cek-stat{padding:6px 4px}.cek-stat-label{font-size:9px}.cek-stat-value{font-size:10px;line-height:1.25}.cek-item-name{font-size:13px}.cek-row-name .laba-remove{padding:2px 6px;font-size:11px}}
+@media(max-width:600px){.header-module-title{font-size:16px;max-width:calc(100% - 130px);overflow:hidden;text-overflow:ellipsis}header{padding:9px 12px 10px}.home-screen{margin:10px auto 20px}.home-intro{padding:20px 5px}.home-intro p{font-size:13px}.home-grid{grid-template-columns:1fr;gap:10px}.home-card{min-height:100px;display:grid;grid-template-columns:54px minmax(0,1fr);grid-template-rows:auto auto;justify-items:start;text-align:left;padding:15px;column-gap:13px;row-gap:4px}.home-icon{grid-row:1 / span 2;width:48px;height:48px}.home-card strong{align-self:end;font-size:17px}.home-card span:last-child{align-self:start}.header-row{gap:8px;flex-wrap:nowrap;min-width:0}.brand{font-size:14px;line-height:1.2;min-width:0}.brand small{font-size:9px;line-height:1.2}.header-actions{gap:6px;margin-left:auto;flex:none}.home-button{padding:7px 9px;font-size:12px}.status{display:none}}
+
+
+/* Laba: panel input tetap terlihat saat daftar angka di kanan panjang; Clean All di bawah input */
+#labaSlide .laba-input-panel{position:sticky;top:calc(var(--app-header-height, 88px) + 12px);align-self:start}
+#labaSlide .laba-clean-btn{display:block;width:100%;margin-top:10px}
+@media(max-width:600px){
+ #labaSlide .laba-input-panel{top:82px}
+ #labaSlide .laba-clean-btn{font-size:10px;padding:7px 5px;margin-top:8px}
+}
+
+/* Cek Item: ikon keranjang diposisikan di pojok kanan atas setiap kartu hasil */
+#cekItemSlide .search-popup .result-item{position:relative;padding-top:12px;padding-right:12px}
+#cekItemSlide .search-popup .result-item-heading{position:static;display:block;padding-right:42px;min-width:0}
+#cekItemSlide .search-popup .result-item-title{min-width:0}
+#cekItemSlide .search-popup .cart-icon-only{position:absolute;top:10px;right:10px;width:34px;height:34px;padding:6px;z-index:1}
+#cekItemSlide .search-popup .cart-icon-only svg{width:19px;height:19px}
+@media(max-width:600px){
+ #cekItemSlide .search-popup .result-item{padding:9px;padding-top:10px}
+ #cekItemSlide .search-popup .result-item-heading{padding-right:38px}
+ #cekItemSlide .search-popup .cart-icon-only{top:8px;right:8px;width:30px;height:30px;padding:5px}
+ #cekItemSlide .search-popup .cart-icon-only svg{width:18px;height:18px}
+}
+
+/* Cek Item: dua halaman Input/Hasil dengan navigasi tetap di bar biru */
+#cekTabs{display:none}
+#appHeader.manager-mode #cekTabs{display:none!important}
+#appHeader.cek-mode #cekTabs{display:flex;gap:5px;max-width:1180px;margin:8px auto 0;padding:0 18px;flex-wrap:nowrap}
+#appHeader.cek-mode #managerTabs{display:none!important}
+#appHeader.cek-mode{padding-top:10px;padding-bottom:8px}
+#cekTabs .tab{flex:1;min-width:0;padding:6px 9px;border:1px solid #ffffff45;border-radius:8px;background:#ffffff16;color:#fff;font-size:12px;line-height:1.2;white-space:nowrap;box-shadow:none}
+#cekTabs .tab.active{background:#fff;color:#263575;border-color:#fff;box-shadow:0 2px 6px #17203322}
+.cek-page{display:none}
+.cek-page.active{display:block}
+@media(max-width:600px){#appHeader.cek-mode #cekTabs{gap:5px;padding:0 4px;margin-top:7px}#cekTabs .tab{padding:6px 8px;font-size:12px}}
+
+/* Navigasi Data Manager berada di bar biru dan menetap saat halaman digulir */
+header{position:sticky;top:0;z-index:100}
+#appHeader .tabs{display:none}
+#appHeader.manager-mode .tabs{display:flex;gap:5px;max-width:1180px;margin:8px auto 0;padding:0 18px;flex-wrap:nowrap}
+#appHeader.manager-mode{padding-top:10px;padding-bottom:8px}
+#appHeader .tab{flex:1;min-width:0;padding:6px 9px;border:1px solid #ffffff45;border-radius:8px;background:#ffffff16;color:#fff;font-size:12px;line-height:1.2;white-space:nowrap;box-shadow:none}
+#appHeader .tab.active{background:#fff;color:#263575;border-color:#fff;box-shadow:0 2px 6px #17203322}
+#appHeader .header-row{max-width:1180px;margin:0 auto}
+#page1 .page-heading,#page2 .page-heading,#page3 .page-heading{display:none!important}
+#page3 .search-workspace{margin-top:0}
+#page3 .search-sidebar{top:112px}
+#page3 .sidebar-cart-mode{display:block;width:100%;min-width:0;max-width:none;margin-top:8px;padding:8px 6px;font-size:12px;border-radius:9px}
+#page3 .search-results-area .unit-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 28px;gap:4px}
+#page3 .cart-slot{padding-top:16px}
+#page3 .cart-slot .cart-icon-only{width:26px;height:28px;max-width:26px;padding:4px;border-radius:7px}
+#page3 .cart-slot .cart-icon-only svg{width:16px;height:16px}
+@media(max-width:600px){
+ #appHeader.manager-mode{padding:7px 8px 6px}
+ #appHeader.manager-mode .tabs{gap:4px;margin-top:6px;padding:0}
+ #appHeader .tab{padding:6px 3px;font-size:10px;border-radius:7px;letter-spacing:-.1px}
+ #page3 .search-workspace{margin-top:0}
+ #page3 .search-sidebar{top:84px}
+ #page3 .search-results-area .unit-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 24px;gap:3px}
+ #page3 .sidebar-cart-mode{font-size:10px;padding:7px 3px;margin-top:6px}
+ #page3 .unit-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 24px;gap:3px}
+ #page3 .cart-slot{padding-top:15px}
+ #page3 .cart-slot .cart-icon-only{width:23px;height:25px;max-width:23px;padding:3px}
+ #page3 .cart-slot .cart-icon-only svg{width:15px;height:15px}
+}
+
+/* Cek Item: tombol +/− tidak mengambil fokus agar keyboard angka tetap terbuka di HP */
+#cekItemSlide #cekSearchResults .unit-controls .qty-btn{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#cekItemSlide #cekSearchResults .unit-input{caret-color:var(--primary);}
+</style>
+
+<style id="cek-input-match-real-fake">
+#cekItemSlide #cekSearchResults .search-popup{position:static;max-height:none;overflow:visible}
+#cekItemSlide #cekSearchResults .result-item{display:block;padding:10px;margin-bottom:8px}
+#cekItemSlide #cekSearchResults .result-item-heading{display:block;min-width:0;padding:0;position:static}
+#cekItemSlide #cekSearchResults .result-name-line{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:0}
+#cekItemSlide #cekSearchResults .item-inline-feedback{font-size:11px;font-weight:800;color:#16866a;line-height:1.2}
+#cekItemSlide #cekSearchResults .item-inline-feedback:empty{display:none}
+#cekItemSlide #cekSearchResults .unit-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 28px;gap:4px;margin-top:10px;align-items:stretch}
+#cekItemSlide #cekSearchResults .cart-slot{display:flex;align-items:center;justify-content:center;min-width:0;padding-top:16px}
+#cekItemSlide #cekSearchResults .cart-slot .cart-icon-only{width:26px;height:28px;max-width:26px;padding:4px;border-radius:7px}
+#cekItemSlide #cekSearchResults .cart-slot .cart-icon-only svg{width:16px;height:16px}
+@media(max-width:600px){
+ #cekItemSlide #cekSearchResults .result-item{padding:8px;margin-bottom:6px}
+ #cekItemSlide #cekSearchResults .unit-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 24px;gap:3px;margin-top:8px}
+ #cekItemSlide #cekSearchResults .unit-box{padding:4px 3px}
+ #cekItemSlide #cekSearchResults .unit-input{padding:7px 2px!important;min-height:34px;font-size:16px!important}
+ #cekItemSlide #cekSearchResults .unit-controls .qty-btn{height:27px;font-size:16px}
+ #cekItemSlide #cekSearchResults .cart-slot{padding-top:15px}
+ #cekItemSlide #cekSearchResults .cart-slot .cart-icon-only{width:23px;height:25px;max-width:23px;padding:3px}
+ #cekItemSlide #cekSearchResults .cart-slot .cart-icon-only svg{width:15px;height:15px}
+}
+</style>
+
+
+<style id="cek-item-cart-adjacent-compact-results">
+/* Cek Item Input: keranjang sebagai kolom kecil tepat di kanan Satuan, bukan di pojok kartu */
+#cekItemSlide #cekSearchResults .result-item{padding:8px;margin-bottom:5px}
+#cekItemSlide #cekSearchResults .result-item-heading{padding:0;position:static}
+#cekItemSlide #cekSearchResults .unit-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 30px;gap:5px;margin-top:6px;align-items:stretch}
+#cekItemSlide #cekSearchResults .unit-box{padding:5px 4px}
+#cekItemSlide #cekSearchResults .unit-box label{margin-bottom:3px;font-size:11px}
+#cekItemSlide #cekSearchResults .unit-help{font-size:9px;margin-top:2px;line-height:1.15}
+#cekItemSlide #cekSearchResults .cart-slot{position:static;display:flex;align-items:center;justify-content:center;align-self:stretch;min-width:0;padding:0!important}
+#cekItemSlide #cekSearchResults .cart-icon-only{position:static!important;inset:auto!important;display:inline-flex;align-items:center;justify-content:center;width:28px!important;height:30px!important;max-width:28px!important;min-width:28px;padding:4px!important;border-radius:7px;align-self:center;z-index:auto}
+#cekItemSlide #cekSearchResults .cart-icon-only svg{width:17px!important;height:17px!important}
+/* Hasil: satu baris ringkas per item agar daftar tidak terlalu panjang */
+#cekItemSlide #cekItemList .cek-row{grid-template-columns:minmax(82px,1.25fr) repeat(3,minmax(0,1fr));align-items:center;gap:5px;padding:7px 8px;border-radius:9px}
+#cekItemSlide #cekItemList .cek-row-name{grid-column:auto;gap:3px;align-items:center;min-width:0}
+#cekItemSlide #cekItemList .cek-item-name{font-size:12px;line-height:1.2;overflow-wrap:anywhere}
+#cekItemSlide #cekItemList .cek-row-name .laba-remove{flex:none;padding:1px 5px;font-size:12px;line-height:1.2}
+#cekItemSlide #cekItemList .cek-stat{background:transparent;border-radius:0;padding:2px 3px;min-width:0}
+#cekItemSlide #cekItemList .cek-stat-label{font-size:9px;line-height:1.1;margin-bottom:2px}
+#cekItemSlide #cekItemList .cek-stat-value{font-size:11px;line-height:1.2;white-space:normal;overflow-wrap:anywhere}
+#cekItemSlide #cekItemList .cek-item-total{text-align:left;font-size:11px}
+#cekItemSlide #cekResultPage .cek-total{margin-top:8px;padding:9px 11px;border-radius:9px}
+#cekItemSlide #cekResultPage .cek-total strong{font-size:17px}
+@media(max-width:600px){
+ #cekItemSlide #cekSearchResults .unit-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 27px;gap:4px;margin-top:5px}
+ #cekItemSlide #cekSearchResults .unit-box{padding:4px 3px}
+ #cekItemSlide #cekSearchResults .unit-input{min-height:32px!important;padding:6px 2px!important}
+ #cekItemSlide #cekSearchResults .unit-controls{gap:3px;margin-top:3px}
+ #cekItemSlide #cekSearchResults .unit-controls .qty-btn{height:25px;font-size:15px}
+ #cekItemSlide #cekSearchResults .cart-icon-only{width:25px!important;height:27px!important;max-width:25px!important;min-width:25px;padding:3px!important}
+ #cekItemSlide #cekSearchResults .cart-icon-only svg{width:15px!important;height:15px!important}
+ #cekItemSlide #cekItemList .cek-row{grid-template-columns:minmax(70px,1.1fr) repeat(3,minmax(0,1fr));gap:3px;padding:6px 5px}
+ #cekItemSlide #cekItemList .cek-item-name{font-size:11px}
+ #cekItemSlide #cekItemList .cek-row-name .laba-remove{padding:1px 4px;font-size:11px}
+ #cekItemSlide #cekItemList .cek-stat{padding:2px 1px}
+ #cekItemSlide #cekItemList .cek-stat-label{font-size:8px}
+ #cekItemSlide #cekItemList .cek-stat-value,#cekItemSlide #cekItemList .cek-item-total{font-size:10px;line-height:1.15}
+ #cekItemSlide #cekResultPage .cek-total{padding:8px 9px}
+ #cekItemSlide #cekResultPage .cek-total strong{font-size:15px}
+}
+
+/* Form tambah item lebih simpel dan ringkas */
+#page1 .item-entry-card{padding:14px}
+#page1 .item-entry-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+#page1 .item-entry-heading h2{font-size:16px;margin:0}
+#page1 .item-entry-form{display:grid;gap:10px}
+#page1 .item-entry-form .field{gap:4px;min-width:0}
+#page1 .item-entry-form .field label{font-size:12px;line-height:1.2}
+#page1 .item-entry-form .field input{padding:9px 10px;border-radius:9px;font-size:14px;min-width:0}
+#page1 .item-name-field{grid-column:1/-1}
+#page1 .item-entry-numbers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+#page1 .item-entry-actions{display:flex;gap:7px;margin-top:1px}
+#page1 .item-entry-actions .btn{padding:8px 12px;font-size:13px}
+@media(max-width:600px){
+ #page1 .item-entry-card{padding:10px;border-radius:12px}
+ #page1 .item-entry-heading{margin-bottom:8px}
+ #page1 .item-entry-heading h2{font-size:14px}
+ #page1 .item-entry-form{gap:7px}
+ #page1 .item-entry-numbers{gap:7px}
+ #page1 .item-entry-form .field label{font-size:11px}
+ #page1 .item-entry-form .field input{padding:8px 7px;font-size:13px}
+ #page1 .item-entry-actions .btn{padding:7px 10px;font-size:12px;border-radius:8px}
+}
+</style>
+
+</head>
+<body>
+<header id="appHeader"><div class="header-row"><div class="brand">Data Manager <small>Pengelolaan item Fake & Asli</small></div><h1 class="header-module-title" id="headerModuleTitle"></h1><div class="header-actions"><button class="home-button" id="homeButton" type="button" aria-label="Kembali ke beranda">⌂ Home</button><div class="status" id="saveStatus">● Penyimpanan otomatis aktif</div></div></div><nav class="tabs" id="managerTabs" aria-label="Navigasi Data Manager"><button class="tab active" data-page="page1">1 · Input</button><button class="tab" data-page="page2">2 · Rekap Data</button><button class="tab" data-page="page3">3 · Pencarian</button></nav><nav class="tabs" id="cekTabs" aria-label="Navigasi Cek Item"><button class="tab active" type="button" data-cek-page="cekInputPage">1 · Input</button><button class="tab" type="button" data-cek-page="cekResultPage">2 · Hasil</button></nav></header>
+<main>
+<section class="home-screen active" id="homeScreen" aria-label="Beranda aplikasi">
+ <div class="home-intro"><h1>Welcome Pejuang Rupiah!</h1><p>Pilih menu yang ingin kamu buka.</p></div>
+ <div class="home-grid">
+  <button class="home-card" type="button" data-open-slide="managerSlide"><span class="home-icon" aria-hidden="true">▤</span><strong>Real &amp; Fake</strong><span>Kelola item, jumlah, dan rekap data.</span></button>
+  <button class="home-card" type="button" data-open-slide="labaSlide"><span class="home-icon" aria-hidden="true">↗</span><strong>Laba</strong><span>Ruang untuk fitur laba yang akan kita rancang.</span></button>
+  <button class="home-card" type="button" data-open-slide="cekItemSlide"><span class="home-icon" aria-hidden="true">✓</span><strong>Cek Item</strong><span>Ruang untuk fitur pemeriksaan item.</span></button>
+ </div>
+</section>
+<div class="main-slide" id="managerSlide">
+<section class="page active" id="page1">
+
+<div class="grid">
+<div class="card span-5 item-entry-card">
+<div class="item-entry-heading"><h2 id="formTitle">Tambah item baru</h2></div>
+<form id="itemForm" class="item-entry-form">
+<div class="field item-name-field"><label for="itemName">Nama item</label><input id="itemName" required maxlength="100" placeholder="Nama item"></div>
+<div class="item-entry-numbers">
+ <div class="field"><label for="itemPrice">Harga (Rp/item)</label><input id="itemPrice" type="number" min="0" step="1" required placeholder="0" inputmode="numeric"></div>
+ <div class="field"><label for="cartonSize">Isi/karton</label><input id="cartonSize" type="number" min="1" step="1" required placeholder="Jumlah" inputmode="numeric"></div>
+</div>
+<div class="item-entry-actions"><button class="btn btn-primary" type="submit" id="saveItemBtn">+ Simpan item</button><button class="btn btn-light" type="button" id="cancelEdit" hidden>Batal</button></div>
+</form>
+</div>
+<div class="card span-7">
+<div class="setup-list-heading"><h2 style="margin:0">Daftar item & harga</h2></div>
+<div id="setupTable"></div>
+<p class="note">Isi karton yang diatur berlaku pada input Karton di Slide 3. Harga yang diatur berlaku sama untuk Fake dan Asli. Data tersimpan otomatis di browser/perangkat ini; ekspor cadangan disarankan untuk memindahkan data.</p>
+<div class="data-management-footer">
+ <div class="data-management-label">Cadangan & pengelolaan data</div>
+ <div class="actions" style="margin:8px 0 0"><button class="btn btn-light" id="exportBtn" type="button">Ekspor cadangan JSON</button><button class="btn btn-light" id="importBtn" type="button">Impor cadangan</button><input id="importFile" type="file" accept=".json,application/json" hidden><button class="btn btn-danger" id="clearAllBtn" type="button">Hapus semua data</button></div>
+</div>
+</div>
+</div>
+</section>
+<section class="page" id="page2">
+
+<div class="card sticky-summary compact-summary" style="margin-bottom:12px"><h2>Ringkasan</h2><div id="bottomSummary"></div><div id="qtyDifferenceSummary" class="qty-difference-compact"></div></div>
+<div class="card">
+<div class="setup-list-heading summary-detail-heading"><h2 style="margin:0">Rincian Item</h2><button class="btn btn-light" id="clearQtyBtn" type="button">Clean semua Qty</button></div>
+<p class="note" style="margin:8px 0 10px">Hanya item yang sudah memiliki Qty Fake atau Asli yang ditampilkan. Qty ditulis dalam format Q = karton; contoh 1Q 12 berarti 1 karton + 12 item.</p><div id="summaryTable"></div>
+</div>
+</section>
+<section class="page" id="page3">
+
+<div class="search-workspace">
+<aside class="search-sidebar" aria-label="Pilihan kategori dan pencarian">
+<nav class="category-switch" aria-label="Pilih kategori untuk input jumlah">
+<button class="category-choice fake active" id="chooseFake" type="button" data-category="fake" aria-pressed="true"><span class="choice-symbol" aria-hidden="true"></span><span>Fake</span></button>
+<button class="category-choice asli" id="chooseAsli" type="button" data-category="asli" aria-pressed="false"><span class="choice-symbol" aria-hidden="true"></span><span>Asli</span></button>
+</nav>
+<button class="search-launcher" id="searchLauncher" type="button" aria-label="Buka kolom pencarian" aria-expanded="false" title="Buka/tutup pencarian"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg><span>Cari item</span></button>
+<select id="cartModeGlobal" class="cart-mode global-cart-mode sidebar-cart-mode" aria-label="Mode jumlah"><option value="add">＋ Tambahkan</option><option value="remove">− Kurangi</option></select>
+</aside>
+<div class="search-results-area"><div class="results-toolbar"><h2 id="resultsHeading">Hasil pencarian Fake</h2><div class="results-toolbar-actions"></div></div><div class="search-popup" id="resultsFake" hidden></div><div class="search-popup" id="resultsAsli" hidden></div><div id="resultsHint" class="empty">Ketik nama item di kolom pencarian untuk menampilkan hasil di sini.</div></div>
+</div>
+<div class="floating-search-window" id="floatingSearchWindow" hidden role="dialog" aria-label="Kolom pencarian melayang">
+ <div class="floating-search-titlebar" id="floatingSearchTitlebar"><span class="floating-search-grip" aria-hidden="true">⠿</span><strong>Kolom Pencarian</strong><button class="floating-search-close" id="floatingSearchClose" type="button" aria-label="Tutup pencarian" title="Tutup">×</button></div>
+ <div class="floating-search-content">
+  <div class="search-panel fake active-search" id="fakeSearchPanel"><div class="search-body"><div class="search-wrap"><div class="search-row"><input class="search-input" id="searchFake" placeholder="Cari item Fake..." autocomplete="off" aria-label="Cari item Fake"><button class="clear-search" id="clearSearchFake" type="button" aria-label="Hapus pencarian Fake" title="Hapus pencarian">×</button></div></div></div></div>
+  <div class="search-panel asli" id="asliSearchPanel"><div class="search-body"><div class="search-wrap"><div class="search-row"><input class="search-input" id="searchAsli" placeholder="Cari item Asli..." autocomplete="off" aria-label="Cari item Asli"><button class="clear-search" id="clearSearchAsli" type="button" aria-label="Hapus pencarian Asli" title="Hapus pencarian">×</button></div></div></div></div>
+ </div>
+</div>
+</section>
+</div>
+<section class="main-slide" id="labaSlide">
+ <div class="module-shell">
+  <div class="laba-layout">
+   <div class="laba-panel laba-input-panel"><h2>Input Angka</h2><form id="labaForm" class="laba-entry-form"><input id="labaInput" type="number" step="any" inputmode="decimal" placeholder="Masukkan angka" aria-label="Masukkan angka"><button class="laba-add" type="submit" aria-label="Tambahkan angka">+</button></form><button type="button" class="clean-module-btn laba-clean-btn" id="cleanLabaBtn">Clean All</button></div>
+   <div class="laba-divider" aria-hidden="true"></div>
+   <div class="laba-panel"><h2>Angka Terinput</h2><div id="labaNumberList" class="laba-number-list"></div><div class="laba-total"><span>Total</span><strong id="labaTotal">0</strong></div></div>
+  </div>
+ </div>
+</section>
+<section class="main-slide" id="cekItemSlide">
+ <div class="module-shell">
+  <section class="cek-page active" id="cekInputPage" aria-label="Input Cek Item">
+   <div class="card"><div class="search-wrap cek-search"><div class="search-row"><input class="search-input" id="cekSearch" placeholder="Cari item..." autocomplete="off" aria-label="Cari item"><button class="clear-search" id="cekSearchClear" type="button" aria-label="Hapus pencarian" title="Hapus pencarian">×</button></div><div class="search-popup" id="cekSearchResults" hidden></div></div>
+   </div>
+  </section>
+  <section class="cek-page" id="cekResultPage" aria-label="Hasil Cek Item">
+   <div class="module-head"><span aria-hidden="true"></span><button type="button" class="clean-module-btn" id="cleanCekBtn">Clean All</button></div>
+   <div class="card"><h2 style="margin-top:0">Rincian Item Terinput</h2><div id="cekItemList" class="cek-list"></div><div class="cek-total"><span>Total Harga</span><strong id="cekTotalPrice">Rp0</strong></div></div>
+  </section>
+ </div>
+</section>
+</main>
+<footer>Data disimpan secara lokal pada browser ini · Tidak dikirim ke server</footer>
+<div id="floatingPopup" class="floating-popup" hidden role="dialog" aria-live="polite"></div>
+<script>
+(() => {
+'use strict';
+const STORAGE_KEY='fakeAsliDataManager_v1';
+// Data awal bawaan aplikasi: item dan harga dari cadangan pengguna. Qty mulai dari 0 di perangkat baru.
+const DEFAULT_ITEMS=[{"id":"mvjq0408-1ehjgmo","name":"magma","price":1800},{"id":"mvjq0sg8-rlnw54c","name":"anggur","price":1800},{"id":"mvjq0y7c-18nqjwv","name":"semangka","price":1800}];
+const $=id=>document.getElementById(id);
+const money=n=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0);
+const integer=n=>new Intl.NumberFormat('id-ID',{maximumFractionDigits:0}).format(Number(n)||0);
+const formatQty=(qty,cartonSize)=>{qty=Math.max(0,Math.floor(Number(qty)||0));cartonSize=Math.max(0,Math.floor(Number(cartonSize)||0));if(!cartonSize)return integer(qty);const cartons=Math.floor(qty/cartonSize),rest=qty%cartonSize;return cartons?`${integer(cartons)}Q${rest?' '+integer(rest):''}`:integer(qty)};
+const safeNumber=v=>Math.max(0,Math.floor(Number(v)||0));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let data=[],inlineEditingId=null;
+function fresh(){return {id:makeId(),name:'',priceFake:0,priceAsli:0,qtyFake:0,qtyAsli:0}}
+function makeId(){return Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,9)}
+function load(){
+ try{
+  const raw=localStorage.getItem(STORAGE_KEY);
+  if(raw){
+   const parsed=JSON.parse(raw);
+   if(Array.isArray(parsed))data=parsed.map(x=>{const price=safeNumber(x.price!==undefined?x.price:(x.priceFake??x.priceAsli??0));return {id:String(x.id||makeId()),name:String(x.name||''),price,priceFake:price,priceAsli:price,cartonSize:safeNumber(x.cartonSize),qtyFake:safeNumber(x.qtyFake),qtyAsli:safeNumber(x.qtyAsli),historyFake:Array.isArray(x.historyFake)?x.historyFake:[],historyAsli:Array.isArray(x.historyAsli)?x.historyAsli:[]}}).filter(x=>x.name.trim());
+  }else{
+   data=DEFAULT_ITEMS.map(x=>({id:x.id||makeId(),name:x.name,price:x.price,priceFake:x.price,priceAsli:x.price,cartonSize:safeNumber(x.cartonSize),qtyFake:0,qtyAsli:0,historyFake:[],historyAsli:[]}));
+   localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+  }
+ }catch(e){console.warn('Data lokal tidak dapat dibaca',e);$('saveStatus').textContent='⚠ Penyimpanan tidak tersedia';}
+}
+function persist(){
+ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(data));$('saveStatus').textContent='● Tersimpan otomatis';}
+ catch(e){$('saveStatus').textContent='⚠ Gagal menyimpan';alert('Browser tidak dapat menyimpan data. Coba aktifkan penyimpanan lokal atau ekspor cadangan.');}
+}
+function totals(){return data.reduce((t,x)=>{t.qtyFake+=x.qtyFake;t.qtyAsli+=x.qtyAsli;t.fakeMoney+=x.qtyFake*(x.price??x.priceFake);t.asliMoney+=x.qtyAsli*(x.price??x.priceAsli);return t;},{qtyFake:0,qtyAsli:0,fakeMoney:0,asliMoney:0})}
+function navigate(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.page===id));if(id==='page2')renderSummary();if(id==='page3')renderSearch();window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('#managerTabs .tab').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.page)));
+function navigateCekPage(id){document.querySelectorAll('.cek-page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('#cekTabs .tab').forEach(b=>b.classList.toggle('active',b.dataset.cekPage===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='cekResultPage')renderCekItems();}
+document.querySelectorAll('#cekTabs .tab').forEach(b=>b.addEventListener('click',()=>navigateCekPage(b.dataset.cekPage)));
+let currentMainSlide=null;
+function openHome(){currentMainSlide=null;$('homeScreen').classList.add('active');document.querySelectorAll('.main-slide').forEach(s=>s.classList.remove('active'));$('homeButton').classList.remove('visible');$('appHeader').classList.remove('module-mode','manager-mode','cek-mode');$('headerModuleTitle').textContent='';window.scrollTo({top:0,behavior:'smooth'});}
+function openMainSlide(id){currentMainSlide=id;$('homeScreen').classList.remove('active');document.querySelectorAll('.main-slide').forEach(s=>s.classList.toggle('active',s.id===id));$('homeButton').classList.add('visible');const isModule=id==='managerSlide'||id==='labaSlide'||id==='cekItemSlide';$('appHeader').classList.toggle('module-mode',isModule);$('appHeader').classList.toggle('manager-mode',id==='managerSlide');$('appHeader').classList.toggle('cek-mode',id==='cekItemSlide');$('headerModuleTitle').textContent=id==='managerSlide'?'Real & Fake':id==='labaSlide'?'Laba':id==='cekItemSlide'?'Cek Item':'';window.scrollTo({top:0,behavior:'smooth'});if(id==='labaSlide')renderLaba();if(id==='cekItemSlide')renderCekItems();if(id==='managerSlide'){const activePage=document.querySelector('.page.active');if(activePage&&activePage.id==='page2')renderSummary();if(activePage&&activePage.id==='page3')renderSearch();}}
+document.querySelectorAll('[data-open-slide]').forEach(b=>b.addEventListener('click',()=>openMainSlide(b.dataset.openSlide)));
+$('homeButton').addEventListener('click',openHome);
+
+function renderSetup(){
+ const host=$('setupTable');
+ if(!data.length){host.innerHTML='<div class="empty">Belum ada item. Tambahkan item melalui formulir di sebelah kiri.</div>';return;}
+ host.innerHTML='<div class="table-wrap"><table><thead><tr><th>Nama item</th><th class="num">Harga/item</th><th class="num">Isi/karton</th><th class="num">Aksi</th></tr></thead><tbody>'+data.map(x=>{
+  if(inlineEditingId===x.id){return `<tr class="inline-edit-row"><td><input class="inline-edit-input" data-inline-field="name" data-id="${esc(x.id)}" aria-label="Nama item" value="${esc(x.name)}"></td><td><input class="inline-edit-input" data-inline-field="price" data-id="${esc(x.id)}" aria-label="Harga per item" type="number" min="0" step="1" value="${Number(x.price)||0}"></td><td><input class="inline-edit-input" data-inline-field="carton" data-id="${esc(x.id)}" aria-label="Isi per karton" type="number" min="1" step="1" value="${Number(x.cartonSize)||0}"></td><td><div class="inline-actions"><button class="btn btn-primary btn-small" data-inline-save="${esc(x.id)}" type="button">Simpan</button><button class="btn btn-light btn-small" data-inline-cancel="${esc(x.id)}" type="button">Batal</button></div></td></tr>`;}
+  return `<tr><td><span class="item-name">${esc(x.name)}</span></td><td class="num money">${money(x.price)}</td><td class="num">${x.cartonSize>0?integer(x.cartonSize):'<span class="subtext">Belum diatur</span>'}</td><td class="num"><button class="btn btn-light btn-small" data-edit="${esc(x.id)}" type="button">Edit</button> <button class="btn btn-danger btn-small" data-delete="${esc(x.id)}" type="button">Hapus</button></td></tr>`;
+ }).join('')+'</tbody></table></div>';
+ host.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>editItem(b.dataset.edit)));
+ host.querySelectorAll('[data-delete]').forEach(b=>b.addEventListener('click',()=>deleteItem(b.dataset.delete)));
+ host.querySelectorAll('[data-inline-cancel]').forEach(b=>b.addEventListener('click',()=>{inlineEditingId=null;renderSetup()}));
+ host.querySelectorAll('[data-inline-save]').forEach(b=>b.addEventListener('click',()=>saveInlineItem(b.dataset.inlineSave)));
+ host.querySelectorAll('[data-inline-field]').forEach(inp=>inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();saveInlineItem(inp.dataset.id)}if(e.key==='Escape'){inlineEditingId=null;renderSetup()}}));
+}
+function editItem(id){inlineEditingId=id;renderSetup();const input=document.querySelector(`[data-inline-field="name"][data-id="${CSS.escape(id)}"]`);if(input){input.focus();input.select();}}
+function saveInlineItem(id){
+ const x=data.find(x=>x.id===id);if(!x)return;
+ const get=field=>document.querySelector(`[data-inline-field="${field}"][data-id="${CSS.escape(id)}"]`);
+ const name=(get('name')?.value||'').trim(),priceText=get('price')?.value??String(x.price??0),cartonText=get('carton')?.value??String(x.cartonSize||0);
+ const price=safeNumber(priceText),cartonSize=safeNumber(cartonText);
+ // Jangan mengubah apa pun jika kolom tidak disentuh atau nilainya tetap sama.
+ if(name===x.name&&String(priceText)===String(Number(x.price)||0)&&String(cartonText)===String(Number(x.cartonSize)||0)){inlineEditingId=null;renderSetup();return;}
+ if(name===x.name&&price===Number(x.price)&&cartonSize===Number(x.cartonSize||0)){inlineEditingId=null;renderSetup();return;}
+ if(!name){alert('Nama item wajib diisi.');get('name')?.focus();return;}
+ if(cartonSize<1){alert('Isi per karton harus minimal 1 item.');get('carton')?.focus();return;}
+ if(data.some(y=>y.id!==id&&y.name.toLocaleLowerCase()===name.toLocaleLowerCase())){alert('Nama item tersebut sudah ada. Gunakan nama yang berbeda.');get('name')?.focus();return;}
+ x.name=name;x.price=price;x.priceFake=price;x.priceAsli=price;x.cartonSize=cartonSize;inlineEditingId=null;persist();renderAll();
+}
+function resetForm(){$('itemForm').reset();$('formTitle').textContent='Tambah item baru';$('saveItemBtn').textContent='+ Simpan item';$('cancelEdit').hidden=true}
+$('cancelEdit').addEventListener('click',resetForm);
+$('itemForm').addEventListener('submit',e=>{
+ e.preventDefault();const name=$('itemName').value.trim();const price=safeNumber($('itemPrice').value);const cartonSize=safeNumber($('cartonSize').value);if(!name)return;if(cartonSize<1){alert('Isi per karton harus minimal 1 item.');$('cartonSize').focus();return;}
+ const duplicate=data.find(x=>x.name.toLocaleLowerCase()===name.toLocaleLowerCase());
+ if(duplicate){alert('Nama item tersebut sudah ada. Gunakan nama yang berbeda atau edit item yang sudah ada.');return}
+ data.push({id:makeId(),name,price,priceFake:price,priceAsli:price,cartonSize,qtyFake:0,qtyAsli:0,historyFake:[],historyAsli:[]});
+ persist();resetForm();inlineEditingId=null;renderAll();
+});
+function deleteItem(id){const x=data.find(x=>x.id===id);if(!x)return;if(!confirm(`Hapus item "${x.name}" beserta jumlahnya?`))return;data=data.filter(x=>x.id!==id);if(inlineEditingId===id)inlineEditingId=null;persist();renderAll()}
+function showFloating(anchor,html){
+ const pop=$('floatingPopup');pop.innerHTML=html;pop.hidden=false;
+ const r=anchor.getBoundingClientRect(),w=Math.min(340,window.innerWidth-24);
+ let left=Math.max(12,Math.min(r.left,window.innerWidth-w-12));
+ let top=r.bottom+7;if(top+pop.offsetHeight>window.innerHeight-12)top=Math.max(12,r.top-pop.offsetHeight-7);
+ pop.style.left=left+'px';pop.style.top=top+'px';
+ const close=pop.querySelector('.popup-close');if(close)close.addEventListener('click',()=>{pop.hidden=true});
+}
+document.addEventListener('click',e=>{const pop=$('floatingPopup');if(!pop.hidden&&!pop.contains(e.target)&&!e.target.closest('[data-history]')&&e.target.id!=='showQtyDifferences')pop.hidden=true;});
+window.addEventListener('resize',()=>{$('floatingPopup').hidden=true});
+function renderSummary(){
+ const t=totals();
+ const activeItems=data.filter(x=>safeNumber(x.qtyFake)>0||safeNumber(x.qtyAsli)>0);
+ $('summaryTable').innerHTML=!activeItems.length?'<div class="empty">Belum ada item yang memiliki Qty. Item akan muncul di sini setelah jumlah Fake atau Asli diinput.</div>':'<div class="table-wrap"><table><thead><tr><th>Item</th><th class="num fake-head">Qty Fake</th><th class="num fake-head">Total Fake</th><th class="num asli-head">Qty Asli</th><th class="num asli-head">Total Asli</th></tr></thead><tbody>'+activeItems.map(x=>`<tr><td><span class="item-name">${esc(x.name)}</span></td><td class="num fake-cell qty-history-cell"><button class="history-btn" data-history="${esc(x.id)}" data-kind="fake" title="Klik untuk melihat riwayat">${formatQty(x.qtyFake,x.cartonSize)}</button><div class="history-popover" data-popover="${esc(x.id)}-fake" hidden></div></td><td class="num fake-cell money">${money(x.qtyFake*x.price)}</td><td class="num asli-cell qty-history-cell"><button class="history-btn" data-history="${esc(x.id)}" data-kind="asli" title="Klik untuk melihat riwayat">${formatQty(x.qtyAsli,x.cartonSize)}</button><div class="history-popover" data-popover="${esc(x.id)}-asli" hidden></div></td><td class="num asli-cell money">${money(x.qtyAsli*x.price)}</td></tr>`).join('')+`<tr><td><strong>TOTAL</strong></td><td class="num fake-cell"></td><td class="num fake-cell money fake-text">${money(t.fakeMoney)}</td><td class="num asli-cell"></td><td class="num asli-cell money real-text">${money(t.asliMoney)}</td></tr></tbody></table></div>`;
+ $('bottomSummary').innerHTML=`<div class="bottom-totals"><div class="bottom-total fake"><div class="label">Fake</div><div class="value fake-text">${money(t.fakeMoney)}</div></div><div class="bottom-total asli"><div class="label">Asli</div><div class="value real-text">${money(t.asliMoney)}</div></div><div class="bottom-total difference-total"><div class="label">Selisih</div><div class="value">${money(Math.abs(t.fakeMoney-t.asliMoney))}</div></div></div>`;
+ const diffs=activeItems.filter(x=>x.qtyFake!==x.qtyAsli);
+ $('qtyDifferenceSummary').innerHTML=`<button type="button" class="diff-summary-link" id="showQtyDifferences">${diffs.length?`${integer(diffs.length)} item memiliki Qty Fake dan Asli berbeda — klik untuk rincian`:'Semua item memiliki Qty Fake dan Asli yang sama'}</button>`;
+ const diffButton=$('showQtyDifferences');if(diffButton)diffButton.addEventListener('click',()=>{if(!diffs.length){showFloating(diffButton,'<div class="popup-head">Perbedaan Qty <button class="popup-close" type="button">×</button></div><div>Semua item memiliki jumlah Fake dan Asli yang sama.</div>');return;}const detail='<div class="popup-head">Rincian perbedaan Qty <button class="popup-close" type="button">×</button></div>'+diffs.map(x=>{const d=Math.abs(x.qtyFake-x.qtyAsli),fh=x.qtyFake>x.qtyAsli;return `<div style="padding:7px 0;border-top:1px solid var(--line)"><strong>${esc(x.name)}</strong><div><span class="fake-text">Fake: ${formatQty(x.qtyFake,x.cartonSize)}</span> · <span class="real-text">Asli: ${formatQty(x.qtyAsli,x.cartonSize)}</span></div><div><strong>${fh?'Fake lebih banyak':'Asli lebih banyak'} ${formatQty(d,x.cartonSize)}</strong></div></div>`}).join('');showFloating(diffButton,detail);});
+ document.querySelectorAll('[data-history]').forEach(b=>b.addEventListener('click',()=>{
+   const x=data.find(x=>x.id===b.dataset.history);if(!x)return;
+   const kind=b.dataset.kind,hist=kind==='fake'?(x.historyFake||[]):(x.historyAsli||[]);
+   const chips=hist.length?hist.map((v,i)=>{const n=Number(v)||0,sign=i===0?(n<0?'−':''):(n<0?' − ':' + ');return `${i?`<span class="history-operator">${sign.trim()}</span>`:''}<span class="popup-chip">${sign&&i===0?sign:''}${formatQty(Math.abs(n),x.cartonSize)}</span>`}).join(''):'<span class="subtext">Belum ada perubahan</span>';
+   showFloating(b,`<div class="popup-head">Riwayat ${kind.toUpperCase()} <button class="popup-close" type="button">×</button></div><div class="popup-chips">${chips}</div><div style="margin-top:7px">Saat ini: <strong>${formatQty(kind==='fake'?x.qtyFake:x.qtyAsli,x.cartonSize)}</strong></div>`);
+ }));
+}
+function applyQty(id,kind,delta){
+ const x=data.find(x=>x.id===id);if(!x)return false;
+ const isFake=kind==='fake',key=isFake?'qtyFake':'qtyAsli',historyKey=isFake?'historyFake':'historyAsli';
+ const before=x[key],after=Math.max(0,before+delta),actual=after-before;
+ if(actual===0){alert(delta<0?'Jumlah tidak bisa kurang dari 0.':'Masukkan jumlah terlebih dahulu.');return false}
+ x[key]=after;if(!Array.isArray(x[historyKey]))x[historyKey]=[];x[historyKey].push((actual>0?'+':'')+actual);
+ // Pertahankan teks pencarian dan hasil yang cocok; render ulang akan mengosongkan input jumlah saja.
+ // Simpan identitas kolom angka yang sedang aktif agar render ulang tidak menutup keyboard HP.
+ const focusedField=document.activeElement;
+ const focusedUnit=focusedField&&focusedField.matches('[data-unit-qty]')?focusedField.dataset.unitQty:null;
+ const focusedId=focusedField&&focusedField.matches('[data-unit-qty]')?focusedField.dataset.id:null;
+ persist();renderAll();$('resultsHeading').textContent=`Hasil pencarian ${kind==='fake'?'Fake':'Asli'}`;$('resultsHint').hidden=true;
+ if(focusedUnit&&focusedId){const nextField=document.getElementById(`qty-${focusedUnit}-${focusedId}`);if(nextField){try{nextField.focus({preventScroll:true})}catch(_){nextField.focus()}}}
+ return true;
+}
+function renderSearch(){renderSearchCategory('fake');renderSearchCategory('asli')}
+function renderSearchCategory(kind){
+ const isFake=kind==='fake',type=isFake?'qtyFake':'qtyAsli',price='price';
+ const input=$(isFake?'searchFake':'searchAsli'),host=$(isFake?'resultsFake':'resultsAsli');
+ const query=input.value.trim().toLocaleLowerCase();
+ const heading=$('resultsHeading'),hint=$('resultsHint');if(heading)heading.textContent=`Hasil pencarian ${isFake?'Fake':'Asli'}`;
+ if(!query){host.hidden=true;host.innerHTML='';if(hint)hint.hidden=!!$('searchFake').value.trim()||!!$('searchAsli').value.trim();return} 
+ const rows=data.filter(x=>x.name.toLocaleLowerCase().includes(query));
+ host.hidden=false;const otherHost=$(isFake?'resultsAsli':'resultsFake');if(otherHost)otherHost.hidden=true;if(hint)hint.hidden=true;
+ host.innerHTML=!rows.length?'<div class="empty">Item tidak ditemukan.</div>':rows.map(x=>{
+   const cartonReady=Number(x.cartonSize)>0;
+   const units=[{key:'carton',label:'Karton',multiplier:cartonReady?Number(x.cartonSize):0,help:cartonReady?`${integer(x.cartonSize)} item/karton`:'Atur di Slide 1'},{key:'loose',label:'Satuan',multiplier:1,help:'1 item'}];
+   return `<div class="result-item" data-result-id="${esc(x.id)}"><div class="result-item-heading"><div class="result-item-title"><div class="result-name-line"><div class="name">${esc(x.name)}</div><span class="item-inline-feedback" id="itemStatus-${esc(x.id)}-${kind}" aria-live="polite"></span></div><div class="price">${money(x.price)} / item</div></div></div><div class="unit-grid">${units.map(u=>`<div class="unit-box"><label for="qty-${u.key}-${esc(x.id)}">${u.label}</label><input class="number-input unit-input" id="qty-${u.key}-${esc(x.id)}" type="number" min="0" step="1" value="" placeholder="" inputmode="numeric" aria-label="Jumlah ${u.label} untuk ${esc(x.name)}" data-unit-qty="${u.key}" data-id="${esc(x.id)}" data-kind="${kind}" data-multiplier="${u.multiplier}" ${u.key==='carton'&&!cartonReady?'disabled':''}><div class="unit-controls"><button class="qty-btn" type="button" data-unit-step="-1" aria-label="Kurangi ${u.label}" ${u.key==='carton'&&!cartonReady?'disabled':''}>−</button><button class="qty-btn" type="button" data-unit-step="1" aria-label="Tambah ${u.label}" ${u.key==='carton'&&!cartonReady?'disabled':''}>＋</button></div><div class="unit-help">${u.help}</div></div>`).join('')}<div class="cart-slot"><button class="cart-action cart-icon-only" type="button" data-add-cart="${esc(x.id)}" data-kind="${kind}" aria-label="Simpan jumlah ${esc(x.name)} ke keranjang" title="Simpan ke keranjang"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg></button></div></div></div>`;
+ }).join('');
+ host.querySelectorAll('[data-add-cart]').forEach(button=>{
+   // Jangan pindahkan fokus dari kolom angka saat ikon keranjang disentuh di HP.
+   button.addEventListener('pointerdown',e=>e.preventDefault());
+   button.addEventListener('mousedown',e=>e.preventDefault());
+   button.addEventListener('click',()=>{
+   const row=button.closest('.result-item'),id=button.dataset.addCart,kind=button.dataset.kind;
+   let total=0,hasInvalidCarton=false;
+   row.querySelectorAll('[data-unit-qty]').forEach(inp=>{const amount=safeNumber(inp.value),multiplier=Number(inp.dataset.multiplier)||0;if(amount>0&&multiplier<1)hasInvalidCarton=true;total+=amount*multiplier;});
+   if(hasInvalidCarton){alert('Atur isi per karton terlebih dahulu di Slide 1.');return;}
+   if(total<1){alert('Isi jumlah Karton atau Satuan terlebih dahulu.');row.querySelector('[data-unit-qty]:not(:disabled)')?.focus();return;}
+   const mode=$('cartModeGlobal')?.value||'add';
+   const itemBefore=data.find(x=>x.id===id);const qtyKey=kind==='fake'?'qtyFake':'qtyAsli';const beforeQty=itemBefore?itemBefore[qtyKey]:0;
+   const saved=applyQty(id,kind,mode==='remove'?-total:total);
+   if(saved){const itemAfter=data.find(x=>x.id===id);const status=$('itemStatus-'+id+'-'+kind);const change=(itemAfter?.[qtyKey]||0)-beforeQty;const changeText=`${change>0?'+':change<0?'−':''}${formatQty(Math.abs(change),itemAfter?.cartonSize)}`;if(status)status.textContent=`✓ ${changeText}`;}
+   });
+ });
+ host.querySelectorAll('[data-unit-step]').forEach(button=>{const box=button.closest('.unit-box'),inp=box?.querySelector('[data-unit-qty]');button.addEventListener('pointerdown',e=>{if(inp&&!inp.disabled){e.preventDefault();inp.focus({preventScroll:true});}});button.addEventListener('click',()=>{const row=button.closest('.unit-box'),field=row?.querySelector('[data-unit-qty]');if(!field||field.disabled)return;const step=Number(button.dataset.unitStep)||0;field.value=String(Math.max(0,(Number(field.value)||0)+step));field.dispatchEvent(new Event('input',{bubbles:true}));field.focus({preventScroll:true});});});
+ host.querySelectorAll('[data-unit-qty]').forEach(inp=>{
+   inp.addEventListener('input',()=>{if(inp.value!==''&&Number(inp.value)<0)inp.value='0'});
+   inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const row=inp.closest('.result-item');row?.querySelector('[data-add-cart]')?.click();}});
+ });
+}
+let activeCategory='fake';
+function clearSearchFeedback(kind){const node=$(kind==='fake'?'savedFake':'savedAsli');if(node)node.textContent='';}
+function switchCategory(kind){
+ activeCategory=kind;
+ const isFake=kind==='fake';
+ $('fakeSearchPanel').classList.toggle('active-search',isFake);
+ $('asliSearchPanel').classList.toggle('active-search',!isFake);
+ $('resultsHeading').textContent=`Hasil pencarian ${isFake?'Fake':'Asli'}`;
+ $('resultsFake').hidden=true;$('resultsAsli').hidden=true;$('resultsHint').hidden=false;
+ $('chooseFake').classList.toggle('active',isFake);$('chooseFake').setAttribute('aria-pressed',String(isFake));
+ $('chooseAsli').classList.toggle('active',!isFake);$('chooseAsli').setAttribute('aria-pressed',String(!isFake));
+ $('chooseFake').querySelector('.choice-symbol').textContent=isFake?'✓':'○';
+ $('chooseAsli').querySelector('.choice-symbol').textContent=isFake?'○':'✓';
+ // Kosongkan pencarian saat berpindah kategori agar hasil sebelumnya tidak membingungkan.
+ const searchId=isFake?'searchFake':'searchAsli',otherSearchId=isFake?'searchAsli':'searchFake';
+ $(otherSearchId).value='';clearSearchFeedback(isFake?'asli':'fake');renderSearchCategory(kind);
+ if(!$('floatingSearchWindow')?.hidden)$(searchId).focus({preventScroll:true});
+}
+$('chooseFake').addEventListener('click',()=>switchCategory('fake'));
+$('chooseAsli').addEventListener('click',()=>switchCategory('asli'));
+$('searchFake').addEventListener('input',()=>{clearSearchFeedback('fake');renderSearchCategory('fake');positionMobileResults()});
+$('searchAsli').addEventListener('input',()=>{clearSearchFeedback('asli');renderSearchCategory('asli');positionMobileResults()});
+$('clearSearchFake').addEventListener('click',()=>{$('searchFake').value='';clearSearchFeedback('fake');renderSearchCategory('fake');$('searchFake').focus()});
+$('clearSearchAsli').addEventListener('click',()=>{$('searchAsli').value='';clearSearchFeedback('asli');renderSearchCategory('asli');$('searchAsli').focus()});
+
+// Panel pencarian melayang: tombol ikon membuka/menutup, bilah judul dapat digeser dengan mouse atau sentuhan.
+const searchLauncher=$('searchLauncher'),floatingSearchWindow=$('floatingSearchWindow'),floatingSearchTitlebar=$('floatingSearchTitlebar');
+let floatingSearchPositionInitialized=false;
+function setFloatingSearch(open){
+ floatingSearchWindow.hidden=!open;searchLauncher.setAttribute('aria-expanded',String(open));
+ if(open){
+  if(!floatingSearchPositionInitialized){
+   const rect=searchLauncher.getBoundingClientRect(),w=Math.min(270,window.innerWidth-20);
+   const left=Math.max(10,Math.min(window.innerWidth-w-10,rect.left));
+   const top=Math.max(10,Math.min(window.innerHeight-120,Math.max(12,rect.bottom+8)));
+   floatingSearchWindow.style.left=left+'px';floatingSearchWindow.style.top=top+'px';
+   floatingSearchPositionInitialized=true;
+  }
+  const target=activeCategory==='fake'?'searchFake':'searchAsli';setTimeout(()=>$(target).focus({preventScroll:true}),30);
+ }
+}
+searchLauncher.addEventListener('click',()=>setFloatingSearch(floatingSearchWindow.hidden));
+$('floatingSearchClose').addEventListener('click',()=>setFloatingSearch(false));
+let searchDrag=null;
+floatingSearchTitlebar.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;const r=floatingSearchWindow.getBoundingClientRect();searchDrag={x:e.clientX,y:e.clientY,left:r.left,top:r.top,pointerId:e.pointerId};floatingSearchTitlebar.setPointerCapture?.(e.pointerId);e.preventDefault()});
+floatingSearchTitlebar.addEventListener('pointermove',e=>{if(!searchDrag||searchDrag.pointerId!==e.pointerId)return;const maxLeft=Math.max(0,window.innerWidth-floatingSearchWindow.offsetWidth),maxTop=Math.max(0,window.innerHeight-Math.min(floatingSearchWindow.offsetHeight,window.innerHeight));floatingSearchWindow.style.left=Math.max(0,Math.min(maxLeft,searchDrag.left+e.clientX-searchDrag.x))+'px';floatingSearchWindow.style.top=Math.max(0,Math.min(maxTop,searchDrag.top+e.clientY-searchDrag.y))+'px'});
+function endSearchDrag(e){if(searchDrag&&(!e||searchDrag.pointerId===e.pointerId))searchDrag=null}
+floatingSearchTitlebar.addEventListener('pointerup',endSearchDrag);floatingSearchTitlebar.addEventListener('pointercancel',endSearchDrag);
+// Posisi popup sengaja tidak disesuaikan saat resize/keyboard muncul; hanya drag manual yang mengubah posisinya.
+
+function positionMobileResults(){ /* Hasil berada di panel kanan; tidak menutupi kolom pencarian. */ }
+function resetMobileResultPosition(){['resultsFake','resultsAsli'].forEach(id=>{const h=$(id);h.style.top='';h.style.bottom='';h.style.maxHeight='';});}
+// Jangan memaksa halaman bergeser ke atas saat keyboard muncul; biarkan header dan sidebar sticky tetap terlihat.
+['searchFake','searchAsli'].forEach(id=>$(id).addEventListener('focus',()=>{if(window.matchMedia('(max-width: 600px)').matches){setTimeout(positionMobileResults,250);setTimeout(positionMobileResults,500);}}));
+if(window.visualViewport){window.visualViewport.addEventListener('resize',positionMobileResults);window.visualViewport.addEventListener('scroll',positionMobileResults);}
+window.addEventListener('resize',()=>{if(!window.matchMedia('(max-width: 600px)').matches)resetMobileResultPosition();else positionMobileResults()});
+const LABA_STORAGE_KEY='labaNumbers_v1';
+let labaNumbers=[];
+function loadLabaNumbers(){try{const saved=JSON.parse(localStorage.getItem(LABA_STORAGE_KEY)||'[]');labaNumbers=Array.isArray(saved)?saved.map(Number).filter(Number.isFinite):[]}catch(_){labaNumbers=[]}}
+function persistLabaNumbers(){try{localStorage.setItem(LABA_STORAGE_KEY,JSON.stringify(labaNumbers))}catch(e){console.warn('Angka Laba tidak dapat disimpan',e)}}
+function formatPlainNumber(n){return new Intl.NumberFormat('id-ID',{maximumFractionDigits:6}).format(Number(n)||0)}
+function renderLaba(){
+ const host=$('labaNumberList');if(!host)return;
+ host.innerHTML=labaNumbers.length?labaNumbers.map((n,i)=>`<div class="laba-number-row"><span class="laba-number-value">${esc(formatPlainNumber(n))}</span><button type="button" class="laba-remove" data-laba-remove="${i}" aria-label="Hapus angka ${esc(formatPlainNumber(n))}">×</button></div>`).join(''):'<div class="empty" style="padding:20px 8px">Belum ada angka yang ditambahkan.</div>';
+ host.querySelectorAll('[data-laba-remove]').forEach(b=>b.addEventListener('click',()=>{labaNumbers.splice(Number(b.dataset.labaRemove),1);persistLabaNumbers();renderLaba()}));
+ $('labaTotal').textContent=formatPlainNumber(labaNumbers.reduce((sum,n)=>sum+n,0));
+}
+$('labaForm').addEventListener('submit',e=>{e.preventDefault();const input=$('labaInput'),raw=input.value.trim();if(raw===''||!Number.isFinite(Number(raw))){input.focus();return}labaNumbers.push(Number(raw));persistLabaNumbers();input.value='';renderLaba();input.focus()});
+$('cleanLabaBtn').addEventListener('click',()=>{if(!labaNumbers.length){alert('Daftar Laba sudah kosong.');return}if(!confirm('Hapus semua angka pada Laba?'))return;labaNumbers=[];persistLabaNumbers();renderLaba()});
+const CEK_STORAGE_KEY='cekItemQty_v1';
+let cekItemQty={};
+function loadCekItemQty(){try{const saved=JSON.parse(localStorage.getItem(CEK_STORAGE_KEY)||'{}');cekItemQty=saved&&typeof saved==='object'&&!Array.isArray(saved)?saved:{}}catch(_){cekItemQty={}}}
+function persistCekItemQty(){try{localStorage.setItem(CEK_STORAGE_KEY,JSON.stringify(cekItemQty))}catch(e){console.warn('Data Cek Item tidak dapat disimpan',e)}}
+function renderCekSearch(){
+ const input=$('cekSearch'),host=$('cekSearchResults');if(!input||!host)return;
+ const query=input.value.trim().toLocaleLowerCase();
+ if(!query){host.hidden=true;host.innerHTML='';return}
+ const rows=data.filter(x=>x.name.toLocaleLowerCase().includes(query));host.hidden=false;
+ host.innerHTML=rows.length?rows.map(x=>{
+  const cartonReady=Number(x.cartonSize)>0;
+  const units=[{key:'carton',label:'Karton',multiplier:cartonReady?Number(x.cartonSize):0,help:cartonReady?`${integer(x.cartonSize)} item/karton`:'Atur di Slide 1'},{key:'loose',label:'Satuan',multiplier:1,help:'1 item'}];
+  return `<div class="result-item" data-cek-result-id="${esc(x.id)}"><div class="result-item-heading"><div class="result-item-title"><div class="result-name-line"><div class="name">${esc(x.name)}</div><span class="item-inline-feedback" id="cekItemStatus-${esc(x.id)}" aria-live="polite"></span></div><div class="price">${money(x.price)} / item</div></div></div><div class="unit-grid">${units.map(u=>`<div class="unit-box"><label for="cek-qty-${u.key}-${esc(x.id)}">${u.label}</label><input class="number-input unit-input" id="cek-qty-${u.key}-${esc(x.id)}" type="number" min="0" step="1" value="" placeholder="" inputmode="numeric" aria-label="Jumlah ${u.label} untuk ${esc(x.name)}" data-cek-unit="${u.key}" data-id="${esc(x.id)}" data-multiplier="${u.multiplier}" ${u.key==='carton'&&!cartonReady?'disabled':''}><div class="unit-controls"><button class="qty-btn" type="button" data-cek-step="-1" aria-label="Kurangi ${u.label}" ${u.key==='carton'&&!cartonReady?'disabled':''}>−</button><button class="qty-btn" type="button" data-cek-step="1" aria-label="Tambah ${u.label}" ${u.key==='carton'&&!cartonReady?'disabled':''}>＋</button></div><div class="unit-help">${u.help}</div></div>`).join('')}<div class="cart-slot"><button class="cart-action cart-icon-only" type="button" data-cek-add="${esc(x.id)}" aria-label="Simpan jumlah ${esc(x.name)} ke Cek Item" title="Simpan ke Cek Item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg></button></div></div></div>`;
+ }).join(''):'<div class="empty">Item tidak ditemukan.</div>';
+ host.querySelectorAll('[data-cek-add]').forEach(button=>{
+  // Pertahankan fokus kolom angka supaya keyboard tidak menutup saat keranjang ditekan.
+  button.addEventListener('pointerdown',e=>e.preventDefault());
+  button.addEventListener('mousedown',e=>e.preventDefault());
+  button.addEventListener('click',()=>{
+  const row=button.closest('.result-item'),id=button.dataset.cekAdd;let total=0,hasInvalidCarton=false;
+  row.querySelectorAll('[data-cek-unit]').forEach(inp=>{const amount=safeNumber(inp.value),multiplier=Number(inp.dataset.multiplier)||0;if(amount>0&&multiplier<1)hasInvalidCarton=true;total+=amount*multiplier});
+  if(hasInvalidCarton){alert('Atur isi per karton terlebih dahulu di Slide 1.');return}
+  if(total<1){alert('Isi jumlah Karton atau Satuan terlebih dahulu.');row.querySelector('[data-cek-unit]:not(:disabled)')?.focus();return}
+  cekItemQty[id]=safeNumber(cekItemQty[id])+total;persistCekItemQty();renderCekItems();
+  row.querySelectorAll('[data-cek-unit]').forEach(inp=>inp.value='');
+  const item=data.find(x=>x.id===id),status=$('cekItemStatus-'+id);
+  if(status)status.textContent=`✓ +${formatQty(total,item?.cartonSize)}`;
+  button.title='Tersimpan!';
+  });
+ });
+ host.querySelectorAll('[data-cek-step]').forEach(button=>{
+  const getField=()=>button.closest('.unit-box')?.querySelector('[data-cek-unit]');
+  // Jangan biarkan tombol +/− mengambil fokus dari input: ini mencegah keyboard HP menutup.
+  button.setAttribute('tabindex','-1');
+  const keepInputFocused=e=>{const field=getField();if(field&&!field.disabled){e.preventDefault();}};
+  button.addEventListener('pointerdown',keepInputFocused);
+  button.addEventListener('mousedown',keepInputFocused);
+  button.addEventListener('click',e=>{
+   const field=getField();if(!field||field.disabled)return;
+   e.preventDefault();
+   field.value=String(Math.max(0,(Number(field.value)||0)+(Number(button.dataset.cekStep)||0)));
+   field.dispatchEvent(new Event('input',{bubbles:true}));
+   // Fokus tetap pada kolom angka; tidak memaksa scroll halaman.
+   try{field.focus({preventScroll:true})}catch(_){field.focus()}
+  });
+ });
+ host.querySelectorAll('[data-cek-unit]').forEach(inp=>{
+  inp.addEventListener('input',()=>{if(inp.value!==''&&Number(inp.value)<0)inp.value='0'});
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();inp.closest('.result-item')?.querySelector('[data-cek-add]')?.click()}});
+ });
+}
+function renderCekItems(){
+ const host=$('cekItemList');if(!host)return;
+ const rows=data.filter(x=>safeNumber(cekItemQty[x.id])>0).sort((a,b)=>a.name.localeCompare(b.name,'id'));
+ host.innerHTML=rows.length?rows.map(x=>{const qty=safeNumber(cekItemQty[x.id]),total=qty*(Number(x.price)||0);return `<div class="cek-row"><div class="cek-row-name"><div class="cek-item-name">${esc(x.name)}</div><button type="button" class="laba-remove" data-cek-remove="${esc(x.id)}" aria-label="Hapus jumlah ${esc(x.name)}" title="Hapus dari Cek Item">×</button></div><div class="cek-stat"><div class="cek-stat-label">Harga Satuan</div><div class="cek-stat-value">${money(x.price)}</div></div><div class="cek-stat"><div class="cek-stat-label">Qty</div><div class="cek-stat-value">${formatQty(qty,x.cartonSize)}</div></div><div class="cek-stat"><div class="cek-stat-label">Harga Total</div><div class="cek-item-total cek-stat-value">${money(total)}</div></div></div>`}).join(''):'<div class="empty" style="padding:22px 10px">Belum ada item yang diinput. Cari nama item di kolom atas, isi jumlah, lalu tekan ikon keranjang.</div>';
+ host.querySelectorAll('[data-cek-remove]').forEach(b=>b.addEventListener('click',()=>{delete cekItemQty[b.dataset.cekRemove];persistCekItemQty();renderCekItems()}));
+ $('cekTotalPrice').textContent=money(rows.reduce((sum,x)=>sum+safeNumber(cekItemQty[x.id])*(Number(x.price)||0),0));
+}
+$('cekSearch').addEventListener('input',renderCekSearch);
+$('cekSearchClear').addEventListener('click',()=>{$('cekSearch').value='';renderCekSearch();$('cekSearch').focus()});
+$('cleanCekBtn').addEventListener('click',()=>{if(!Object.values(cekItemQty).some(v=>safeNumber(v)>0)){alert('Daftar Cek Item sudah kosong.');return}if(!confirm('Hapus semua jumlah yang tersimpan di Cek Item?'))return;cekItemQty={};persistCekItemQty();renderCekItems();renderCekSearch()});
+function renderAll(){renderSetup();renderSummary();renderSearch();renderCekSearch();renderCekItems()}
+$('exportBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({app:'Data Manager Fake & Asli',version:1,exportedAt:new Date().toISOString(),items:data},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='cadangan-data-fake-asli.json';a.click();URL.revokeObjectURL(url)});
+$('importBtn').addEventListener('click',()=>$('importFile').click());
+$('importFile').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;try{const parsed=JSON.parse(await file.text());const items=Array.isArray(parsed)?parsed:parsed.items;if(!Array.isArray(items))throw new Error('Format tidak sesuai');const cleaned=items.map(x=>({id:String(x.id||makeId()),name:String(x.name||'').trim(),price:safeNumber(x.price!==undefined?x.price:(x.priceFake??x.priceAsli??0)),priceFake:safeNumber(x.price!==undefined?x.price:(x.priceFake??x.priceAsli??0)),priceAsli:safeNumber(x.price!==undefined?x.price:(x.priceFake??x.priceAsli??0)),cartonSize:safeNumber(x.cartonSize),qtyFake:safeNumber(x.qtyFake),qtyAsli:safeNumber(x.qtyAsli),historyFake:Array.isArray(x.historyFake)?x.historyFake:[],historyAsli:Array.isArray(x.historyAsli)?x.historyAsli:[]})).filter(x=>x.name);if(!confirm(`Impor ${cleaned.length} item? Data yang ada saat ini akan diganti.`))return;const names=new Set();for(const x of cleaned){const k=x.name.toLocaleLowerCase();if(names.has(k))throw new Error('Ada nama item duplikat di file');names.add(k)}data=cleaned;persist();resetForm();inlineEditingId=null;renderAll();alert('Impor berhasil.');}catch(err){alert('File cadangan tidak valid: '+err.message)}finally{e.target.value=''}});
+$('clearQtyBtn').addEventListener('click',()=>{if(!data.some(x=>x.qtyFake||x.qtyAsli)){alert('Semua Qty sudah 0.');return}if(!confirm('Kosongkan semua Qty Fake dan Asli menjadi 0? Data item dan harga tetap tersimpan. Riwayat perubahan juga akan dikosongkan.'))return;data.forEach(x=>{x.qtyFake=0;x.qtyAsli=0;x.historyFake=[];x.historyAsli=[]});persist();renderAll()});
+$('clearAllBtn').addEventListener('click',()=>{if(!data.length){alert('Belum ada data untuk dihapus.');return}if(!confirm('Hapus SEMUA item dan seluruh jumlahnya? Tindakan ini tidak dapat dibatalkan. Sebaiknya ekspor cadangan dahulu.'))return;data=[];persist();resetForm();inlineEditingId=null;renderAll()});
+load();loadLabaNumbers();loadCekItemQty();renderAll();renderLaba();renderCekSearch();
+})();
+</script>
+</body>
+</html>
