@@ -411,6 +411,22 @@ header{position:sticky;top:0;z-index:100}
 }
 </style>
 
+
+<style id="rf-mobile-keyboard-fix">
+/* HP Slide 3: kunci aplikasi pada visual viewport; header/sidebar tetap, hanya daftar item yang scroll. */
+@media (max-width:600px){
+ body.rf-page3-lock{position:fixed!important;top:0!important;left:0!important;right:0!important;width:100%!important;height:var(--rf-visual-height,100dvh)!important;min-height:0!important;overflow:hidden!important;overscroll-behavior:none!important}
+ body.rf-page3-lock #appHeader{position:fixed!important;top:var(--rf-visual-offset,0px)!important;left:0!important;right:0!important;width:100%!important;z-index:500!important}
+ body.rf-page3-lock main{position:fixed!important;top:calc(var(--rf-visual-offset,0px) + var(--rf-header-height,104px))!important;left:0!important;right:0!important;bottom:auto!important;height:calc(var(--rf-visual-height,100dvh) - var(--rf-header-height,104px))!important;min-height:0!important;overflow:hidden!important;margin:0!important;padding:7px 7px 0!important}
+ body.rf-page3-lock #managerSlide,body.rf-page3-lock #page3{height:100%!important;min-height:0!important;overflow:hidden!important}
+ body.rf-page3-lock #page3 .search-workspace{height:100%!important;min-height:0!important;overflow:hidden!important;align-items:stretch!important}
+ body.rf-page3-lock #page3 .search-sidebar{position:static!important;top:auto!important;align-self:stretch!important;min-height:0!important;overflow:visible!important}
+ body.rf-page3-lock #page3 .search-results-area{height:100%!important;min-height:0!important;max-height:100%!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important;touch-action:pan-y!important}
+ body.rf-page3-lock #normalSearchBar .search-input{font-size:16px!important;line-height:1.1!important}
+ body.rf-page3-lock #normalSearchBar .clear-search{flex:0 0 25px!important}
+}
+</style>
+
 </head>
 <body>
 <header id="appHeader"><div class="header-row"><div class="brand">Data Manager <small>Pengelolaan item Fake & Asli</small></div><h1 class="header-module-title" id="headerModuleTitle"></h1><div class="header-actions"><button class="home-button" id="homeButton" type="button" aria-label="Kembali ke beranda">⌂ Home</button><div class="status" id="saveStatus">● Penyimpanan otomatis aktif</div></div></div><nav class="tabs" id="managerTabs" aria-label="Navigasi Data Manager"><button class="tab active" data-page="page1">1 · Input</button><button class="tab" data-page="page2">2 · Rekap Data</button><button class="tab" data-page="page3">3 · Pencarian</button></nav><nav class="tabs" id="cekTabs" aria-label="Navigasi Cek Item"><button class="tab active" type="button" data-cek-page="cekInputPage">1 · Input</button><button class="tab" type="button" data-cek-page="cekResultPage">2 · Hasil</button></nav></header>
@@ -796,5 +812,39 @@ $('clearAllBtn').addEventListener('click',()=>{if(!data.length){alert('Belum ada
 load();loadLabaNumbers();loadCekItemQty();renderAll();renderLaba();renderCekSearch();
 })();
 </script>
+
+<script id="rf-visual-viewport-sync">
+(function(){
+ const root=document.documentElement;
+ const header=document.getElementById('appHeader');
+ function updateRfViewport(){
+   const body=document.body;
+   if(!body.classList.contains('rf-page3-lock') || !header || !header.classList.contains('page3-view')) return;
+   const vv=window.visualViewport;
+   const vh=vv && Number.isFinite(vv.height) ? vv.height : window.innerHeight;
+   const vo=vv && Number.isFinite(vv.offsetTop) ? vv.offsetTop : 0;
+   root.style.setProperty('--rf-visual-height',Math.max(180,vh)+'px');
+   root.style.setProperty('--rf-visual-offset',Math.max(0,vo)+'px');
+   root.style.setProperty('--rf-header-height',header.getBoundingClientRect().height+'px');
+ }
+ window.addEventListener('resize',updateRfViewport,{passive:true});
+ window.addEventListener('orientationchange',()=>setTimeout(updateRfViewport,100),{passive:true});
+ if(window.visualViewport){
+   window.visualViewport.addEventListener('resize',updateRfViewport,{passive:true});
+   window.visualViewport.addEventListener('scroll',updateRfViewport,{passive:true});
+ }
+ document.addEventListener('focusin',function(e){
+   if((e.target && (e.target.id==='searchFake'||e.target.id==='searchAsli')) && document.body.classList.contains('rf-page3-lock')){
+     updateRfViewport();
+     setTimeout(updateRfViewport,80);
+     setTimeout(updateRfViewport,250);
+   }
+ },true);
+ const oldSync=window.syncNormalSearchBar;
+ updateRfViewport();
+ setTimeout(updateRfViewport,0);
+})();
+</script>
+
 </body>
 </html>
