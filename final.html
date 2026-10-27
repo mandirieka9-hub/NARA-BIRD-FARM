@@ -643,6 +643,25 @@ header{position:sticky;top:0;z-index:100}
 }
 </style>
 
+
+<style id="force-light-input-groups-mobile">
+/* Di HP, kelompok Input tetap memakai latar terang meskipun perangkat memakai mode gelap. */
+@media (max-width: 600px) {
+  #rfBatchDetailsSlide .rf-batch-group,
+  #rfBatchDetailsSlide .rf-batch-group:nth-child(odd),
+  #rfBatchDetailsSlide .rf-batch-group:nth-child(even) {
+    background: #ffffff !important;
+    border-color: #dfe5ef !important;
+    color: #172033 !important;
+  }
+  #rfBatchDetailsSlide .rf-batch-group-head,
+  #rfBatchDetailsSlide .rf-batch-group:nth-child(odd) .rf-batch-group-head,
+  #rfBatchDetailsSlide .rf-batch-group:nth-child(even) .rf-batch-group-head {
+    border-bottom-color: #dfe5ef !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <header id="appHeader"><div class="header-row"><div class="brand">Data Manager <small>Pengelolaan item Fake & Asli</small></div><h1 class="header-module-title" id="headerModuleTitle"></h1><div class="header-actions"><button class="home-button" id="homeButton" type="button" aria-label="Kembali ke beranda">⌂ Home</button><div class="status" id="saveStatus">● Penyimpanan otomatis aktif</div></div></div><nav class="tabs" id="managerTabs" aria-label="Navigasi Data Manager"><button class="tab active" data-page="page1">1 · Input</button><button class="tab" data-page="page2">2 · Rekap Data</button><button class="tab" data-page="page3">3 · Pencarian</button></nav><nav class="tabs" id="cekTabs" aria-label="Navigasi Cek Item"><button class="tab active" type="button" data-cek-page="cekInputPage">1 · Input</button><button class="tab" type="button" data-cek-page="cekResultPage">2 · Hasil</button></nav></header>
