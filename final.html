@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pengelolaan Data Fake & Asli</title>
 <style>
-:root{--bg:#fff5f3;--card:#fff;--ink:#241716;--muted:#756765;--line:#f0d7d3;--primary:#e10600;--primary2:#b80000;--fake:#e97836;--real:#16866a;--danger:#c40000;--shadow:0 10px 30px rgba(180,20,10,.09)}
+:root{--bg:#f2f7fc;--card:#fff;--ink:#18283a;--muted:#64758a;--line:#d8e4ef;--primary:#e10600;--primary2:#b80000;--fake:#e97836;--real:#16866a;--danger:#c40000;--shadow:0 10px 30px rgba(35,72,110,.09)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
-header{background:linear-gradient(120deg,#7f1424,#e33d4d);color:white;padding:24px max(20px,calc((100vw - 1180px)/2));}
+header{background:linear-gradient(120deg,#123b63,#246b9b);color:white;padding:24px max(20px,calc((100vw - 1180px)/2));}
 .main-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:16px}.main-tab{border:1px solid var(--line);background:#fff;color:#4b5568;border-radius:12px;padding:12px 10px;font-weight:800;cursor:pointer;font:inherit;font-weight:800}.main-tab.active{background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 5px 14px #d9364533}.main-slide{display:none}.main-slide.active{display:block}.future-placeholder{min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 18px;background:#fff;border:1px dashed #cbd3e2;border-radius:16px;color:var(--muted)}.future-placeholder h1{color:var(--ink);margin:0 0 8px;font-size:24px}.future-placeholder p{margin:0;max-width:420px}
 @media(max-width:600px){.main-tabs{gap:5px;margin-bottom:10px}.main-tab{padding:10px 3px;font-size:12px;border-radius:9px}.future-placeholder{min-height:180px;padding:22px 12px}.future-placeholder h1{font-size:20px}}
 .header-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.brand{font-weight:800;font-size:22px;letter-spacing:.2px}.brand small{display:block;font-weight:500;font-size:12px;opacity:.8}
@@ -503,6 +503,22 @@ header{position:sticky;top:0;z-index:100}
 .rf-discount-modal-empty{padding:14px 8px;text-align:center;color:#8a7773;font-size:12px}
 .rf-discount-modal-total{display:flex;justify-content:space-between;gap:8px;margin-top:10px;padding-top:9px;border-top:1px solid #efd5d1;font-size:12px;font-weight:850;color:#a90000}
 
+
+#rfCartPreview .rf-discount-dialog{width:min(320px,calc(100vw - 28px));max-height:68vh;padding:10px;border-radius:12px}
+#rfCartPreview .rf-discount-dialog-head{margin-bottom:6px;font-size:13px}
+#rfCartPreview .rf-discount-modal-list{display:grid;gap:4px;max-height:42vh;overflow:auto}
+#rfCartPreview .rf-discount-modal-row{padding:5px 7px;border-radius:7px;font-size:11px;gap:5px}
+#rfCartPreview .rf-discount-modal-row strong,#rfCartPreview .rf-preview-subtotal strong,#rfCartPreview .rf-preview-discount strong{font-size:11px}
+#rfCartPreview .rf-preview-subtotal,#rfCartPreview .rf-preview-discount{display:flex;justify-content:space-between;gap:8px;padding:3px 7px;font-size:11px}
+#rfCartPreview .rf-preview-discount{color:#b42318}
+#rfCartPreview .rf-discount-modal-total{margin-top:6px;padding:7px 8px;font-size:12px}
+#rfCartPreview .rf-discount-modal-total strong{font-size:14px}
+#rfCartPreview .rf-discount-dialog>div:last-child{gap:6px!important;margin-top:8px!important}
+#rfCartPreview .rf-discount-dialog>div:last-child .btn{padding:7px 9px;font-size:11px;min-height:34px}
+
+
+.rf-discount-chips{display:flex;align-items:center;gap:5px;flex-wrap:wrap}.rf-discount-chip{display:inline-flex;align-items:center;gap:5px;padding:3px 6px;border-radius:7px;background:#eaf1fb;color:#183b66;font-size:11px;font-weight:750}.rf-discount-chip button,.rf-discount-chip-add{border:0;border-radius:6px;min-width:20px;height:20px;padding:0 4px;background:#ffe5e2;color:#b42323;font-weight:900;font-size:15px;line-height:1;cursor:pointer}.rf-discount-chip-add{background:#e4efff;color:#174a83;font-size:17px}.cek-invoice-simple{display:flex;align-items:center;gap:6px;padding:5px 0}.cek-invoice-name{display:flex;align-items:center;gap:8px;flex:1;min-width:0;text-align:left;border:1px solid #dbe5f2;border-radius:8px;background:#f4f8fd;color:#193b63;padding:8px 10px;cursor:pointer}.cek-invoice-name.active{border-color:#cf332b;background:#fff5f4}.cek-invoice-prefix{font-size:10px;color:#6c7f97;font-weight:700}.cek-invoice-name strong{font-size:12px;overflow-wrap:anywhere}
+
 </style>
 
 <style id="cek-input-match-real-fake">
@@ -699,6 +715,14 @@ header{position:sticky;top:0;z-index:100}
  #rfBatchDetailsSlide .rf-batch-group-title{padding:2px!important}
  #rfBatchDetailsSlide .rf-batch-head-actions{gap:2px!important}
 }
+#rfBatchDetailsSlide .rf-edit-discount{display:inline-flex;align-items:center;gap:4px;margin:3px 2px}
+#rfBatchDetailsSlide .rf-edit-discount input{width:105px;min-width:0;padding:5px 6px;border:1px solid var(--line);border-radius:6px;font:inherit;font-size:11px}
+#rfBatchDetailsSlide .rf-edit-discount button{border:0;border-radius:6px;padding:5px 7px;background:#eaf1f8;color:#21466b;font-size:10px;font-weight:750}
+#rfBatchDetailsSlide .rf-edit-discount button:last-child{background:#fff0f1;color:#b80000}
+.cek-invoice-create .search-input{min-width:0}
+#cekInvoiceList .cek-row{grid-template-columns:minmax(0,1fr) auto auto!important}
+#cekInvoiceList .cek-row button:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:600px){#cekInvoiceList .cek-row{grid-template-columns:minmax(0,1fr) 90px 24px!important;padding:5px;gap:4px}#cekInvoiceList .inline-edit-input{width:90px!important;padding:6px;font-size:11px}}
 </style>
 
 
@@ -749,6 +773,7 @@ header{position:sticky;top:0;z-index:100}
 </div>
 <div class="card span-7">
 <div class="setup-list-heading"><h2 style="margin:0">Daftar item & harga</h2></div>
+<div style="margin:10px 0"><input id="setupSearch" class="search-input" type="search" placeholder="Cari nama item..." aria-label="Cari item di daftar"></div>
 <div id="setupTable"></div>
 <p class="note">Isi karton yang diatur berlaku pada input Karton di Slide 3. Harga yang diatur berlaku sama untuk Fake dan Asli. Data tersimpan otomatis di browser/perangkat ini; ekspor cadangan disarankan untuk memindahkan data.</p>
 <div class="data-management-footer">
@@ -775,7 +800,7 @@ header{position:sticky;top:0;z-index:100}
 <button class="category-choice asli" id="chooseAsli" type="button" data-category="asli" aria-pressed="false"><span class="choice-symbol" aria-hidden="true"></span><span>Asli</span></button>
 </nav>
 
-<select id="cartModeGlobal" class="cart-mode global-cart-mode sidebar-cart-mode" aria-label="Mode jumlah"><option value="add">＋ Tambahkan</option><option value="remove">− Kurangi</option></select>
+
 <div class="rf-cart-detail"><button class="rf-cart-detail-open" id="openRfBatchDetails" type="button"><span>Rincian</span><strong id="rfBatchCount">0</strong><span aria-hidden="true">›</span></button></div>
 <div class="rf-discount-panel" aria-label="Input diskon"><div class="rf-discount-heading"><strong>Diskon</strong><button type="button" class="rf-discount-cart" id="rfDiscountCart" aria-label="Lihat keranjang diskon" title="Keranjang diskon">🛒 <span id="rfDiscountCartCount">0</span></button></div><div id="rfDiscountPending" class="rf-discount-pending" aria-live="polite">Belum ada diskon di keranjang</div><div class="rf-discount-inputs"><div class="rf-discount-entry"><input type="number" min="0" step="1" inputmode="numeric" id="rfDiscount1" placeholder="Nominal diskon 1" aria-label="Nominal diskon 1" autocomplete="off"><button type="button" class="rf-discount-add" data-add-rf-discount="1" aria-label="Tambahkan diskon 1" title="Tambahkan diskon ini">＋</button></div><div class="rf-discount-entry"><input type="number" min="0" step="1" inputmode="numeric" id="rfDiscount2" placeholder="Nominal diskon 2" aria-label="Nominal diskon 2" autocomplete="off"><button type="button" class="rf-discount-add" data-add-rf-discount="2" aria-label="Tambahkan diskon 2" title="Tambahkan diskon ini">＋</button></div><div class="rf-discount-entry"><input type="number" min="0" step="1" inputmode="numeric" id="rfDiscount3" placeholder="Nominal diskon 3" aria-label="Nominal diskon 3" autocomplete="off"><button type="button" class="rf-discount-add" data-add-rf-discount="3" aria-label="Tambahkan diskon 3" title="Tambahkan diskon ini">＋</button></div><div class="rf-discount-entry"><input type="number" min="0" step="1" inputmode="numeric" id="rfDiscount4" placeholder="Nominal diskon 4" aria-label="Nominal diskon 4" autocomplete="off"><button type="button" class="rf-discount-add" data-add-rf-discount="4" aria-label="Tambahkan diskon 4" title="Tambahkan diskon ini">＋</button></div></div><small id="rfDiscountHint">Tekan ＋ untuk menampung diskon. Diskon akan dicatat bersama item saat keranjang item ditekan.</small></div>
 <div class="rf-discount-modal" id="rfDiscountModal" hidden role="dialog" aria-modal="true" aria-labelledby="rfDiscountModalTitle">
@@ -808,16 +833,17 @@ header{position:sticky;top:0;z-index:100}
  <div class="rf-detail-kind-tabs" role="tablist" aria-label="Pilih rincian kategori"><button type="button" id="rfDetailFakeTab" class="active" data-rf-detail-kind="fake" role="tab" aria-selected="true">Fake</button><button type="button" id="rfDetailAsliTab" data-rf-detail-kind="asli" role="tab" aria-selected="false">Asli</button></div>
  <div id="rfBatchGroups" class="rf-batch-groups"></div>
 </section>
+<div class="rf-discount-modal" id="rfCartPreview" hidden role="dialog" aria-modal="true" aria-labelledby="rfCartPreviewTitle"><div class="rf-discount-dialog"><div class="rf-discount-dialog-head"><strong id="rfCartPreviewTitle">Pratinjau Keranjang</strong><button type="button" class="rf-discount-modal-close" id="rfCartPreviewClose" aria-label="Tutup">×</button></div><div id="rfCartPreviewBody" class="rf-discount-modal-list"></div><div class="rf-discount-modal-total"><span>Total</span><strong id="rfCartPreviewTotal">Rp0</strong></div><div style="display:flex;gap:8px;margin-top:12px"><button type="button" class="btn btn-light" id="rfCartPreviewCancel">Kembali</button><button type="button" class="btn btn-primary" id="rfCartPreviewConfirm">Konfirmasi & Simpan</button></div></div></div>
 </div>
 <section class="main-slide" id="cekItemSlide">
  <div class="module-shell">
   <section class="cek-page active" id="cekInputPage" aria-label="Input Cek Item">
-   <div class="card"><div class="search-wrap cek-search"><div class="search-row"><input class="search-input" id="cekSearch" placeholder="Cari item..." autocomplete="off" aria-label="Cari item"><button class="clear-search" id="cekSearchClear" type="button" aria-label="Hapus pencarian" title="Hapus pencarian">×</button></div><div class="search-popup" id="cekSearchResults" hidden></div></div>
+   <div class="card"><div class="cek-invoice-create" style="display:flex;gap:7px;margin-bottom:10px"><input id="cekInvoiceName" class="search-input" type="text" maxlength="60" placeholder="Nama faktur..." aria-label="Nama faktur baru"><button type="button" class="btn btn-primary btn-small" id="cekAddInvoice">+ Faktur</button></div><div id="cekActiveInvoiceLabel" class="note" style="margin:0 0 8px">Faktur aktif: Faktur 1</div><div class="search-wrap cek-search"><div class="search-row"><input class="search-input" id="cekSearch" placeholder="Cari item..." autocomplete="off" aria-label="Cari item"><button class="clear-search" id="cekSearchClear" type="button" aria-label="Hapus pencarian" title="Hapus pencarian">×</button></div><div class="search-popup" id="cekSearchResults" hidden></div></div>
    </div>
   </section>
   <section class="cek-page" id="cekResultPage" aria-label="Hasil Cek Item">
    <div class="module-head"><span aria-hidden="true"></span><button type="button" class="clean-module-btn" id="cleanCekBtn">Clean All</button></div>
-   <div class="card"><h2 style="margin-top:0">Rincian Item Terinput</h2><div id="cekItemList" class="cek-list"></div><div class="cek-total"><span>Total Harga</span><strong id="cekTotalPrice">Rp0</strong></div></div>
+   <div class="card"><div id="cekInvoiceList" class="cek-list" style="margin-bottom:12px"></div><h2 style="margin-top:0">Rincian Item</h2><div id="cekItemList" class="cek-list"></div><div class="cek-total"><span>Total Harga</span><strong id="cekTotalPrice">Rp0</strong></div></div>
   </section>
  </div>
 </section>
@@ -869,7 +895,8 @@ $('homeButton').addEventListener('click',openHome);
 function renderSetup(){
  const host=$('setupTable');
  if(!data.length){host.innerHTML='<div class="empty">Belum ada item. Tambahkan item melalui formulir di sebelah kiri.</div>';return;}
- host.innerHTML='<div class="table-wrap"><table><thead><tr><th>Nama item</th><th class="num">Harga/item</th><th class="num">Isi/karton</th><th class="num">Aksi</th></tr></thead><tbody>'+data.map(x=>{
+ const setupQuery=String($('setupSearch')?.value||'').trim().toLocaleLowerCase();const visibleData=data.filter(x=>x.name.toLocaleLowerCase().includes(setupQuery));if(!visibleData.length){host.innerHTML='<div class="empty">'+(setupQuery?'Item tidak ditemukan.':'Belum ada item.')+'</div>';return;}
+ host.innerHTML='<div class="table-wrap"><table><thead><tr><th>Nama item</th><th class="num">Harga/item</th><th class="num">Isi/karton</th><th class="num">Aksi</th></tr></thead><tbody>'+visibleData.map(x=>{
   if(inlineEditingId===x.id){return `<tr class="inline-edit-row"><td><input class="inline-edit-input" data-inline-field="name" data-id="${esc(x.id)}" aria-label="Nama item" value="${esc(x.name)}"></td><td><input class="inline-edit-input" data-inline-field="price" data-id="${esc(x.id)}" aria-label="Harga per item" type="number" min="0" step="1" value="${Number(x.price)||0}"></td><td><input class="inline-edit-input" data-inline-field="carton" data-id="${esc(x.id)}" aria-label="Isi per karton" type="number" min="1" step="1" value="${Number(x.cartonSize)||0}"></td><td><div class="inline-actions"><button class="btn btn-primary btn-small" data-inline-save="${esc(x.id)}" type="button">Simpan</button><button class="btn btn-light btn-small" data-inline-cancel="${esc(x.id)}" type="button">Batal</button></div></td></tr>`;}
   return `<tr><td><span class="item-name">${esc(x.name)}</span></td><td class="num money">${money(x.price)}</td><td class="num">${x.cartonSize>0?integer(x.cartonSize):'<span class="subtext">Belum diatur</span>'}</td><td class="item-action-cell"><div class="item-row-actions"><button class="btn btn-light btn-small" data-edit="${esc(x.id)}" type="button">Edit</button><button class="btn btn-danger btn-small" data-delete="${esc(x.id)}" type="button">Hapus</button></div></td></tr>`;
  }).join('')+'</tbody></table></div>';
@@ -945,6 +972,7 @@ function applyQty(id,kind,delta){
 }
 // Draft keranjang Slide 3: jumlah bisa diisi pada beberapa item/pencarian sebelum disimpan sekaligus.
 const rfCartDraft={fake:{},asli:{}};
+const rfDraftInputOrder={fake:[],asli:[]};
 let rfLastCartBatch=[];
 const RF_BATCH_STORAGE_KEY='fakeAsliCartBatches_v1';
 let rfCartBatches=[];
@@ -1040,7 +1068,7 @@ function renderRfBatchGroups(){
   const addArea=adding?`<div class="rf-batch-add-area"><div class="rf-batch-add-form"><input type="text" class="rf-detail-add-select" list="rfBatchItemOptions" data-add-batch-select="1" data-group-index="${group._originalIndex}" aria-label="Cari item untuk ditambahkan" placeholder="Ketik nama item..."><input type="text" inputmode="text" autocomplete="off" placeholder="Qty, mis. 1Q 2" aria-label="Qty item baru" data-add-batch-qty="1" data-group-index="${group._originalIndex}"><div class="rf-batch-add-actions"><button type="button" class="rf-detail-save" data-save-add-batch="1" data-group-index="${group._originalIndex}">Tambah</button><button type="button" data-cancel-add-batch="1" data-group-index="${group._originalIndex}">Batal</button></div></div></div>`:'';
   const groupLabel=String(group.name||'').trim()||`Input ${group._originalIndex+1}`;
   const addButton=adding?`<span class="rf-batch-head-add-placeholder"></span>`:`<button type="button" class="rf-batch-add-toggle rf-batch-head-add" data-start-add-batch="1" data-group-index="${group._originalIndex}">+ Item</button>`;
-  const discountLines=discounts.length?`<div class="rf-discount-line"><span class="discount-label">Diskon</span>${discounts.map(amount=>`<strong class="discount-amount">− ${money(amount)}</strong>`).join('')}<span class="discount-total">Harga total ${money(subtotal)}</span></div>`:'';
+  const discountLines=`<div class="rf-discount-line"><span class="discount-label">Diskon</span><div class="rf-discount-chips">${discounts.map((amount,di)=>`<span class="rf-discount-chip">${money(amount)}<button type="button" data-delete-batch-discount="${di}" data-group-index="${group._originalIndex}" aria-label="Hapus diskon">×</button></span>`).join('')}<button type="button" class="rf-discount-chip-add" data-add-batch-discount="${group._originalIndex}" aria-label="Tambah diskon">＋</button></div></div>`;
   return `<article class="rf-batch-group"><div class="rf-batch-group-head">${addButton}<div class="rf-batch-group-title"><strong>${esc(groupLabel)}</strong><small>${group.mode==='remove'?'Kurangi':'Tambahkan'}</small></div><div class="rf-batch-head-actions"><button type="button" class="rf-group-replace-btn" data-replace-selected-group="${group._originalIndex}">Ganti</button><button type="button" class="rf-group-delete-btn" data-delete-batch-group="${group._originalIndex}">Hapus</button></div></div><div class="rf-batch-item-list">${items}</div>${addArea}${discountLines}<div class="rf-batch-total after-discount"><span>Total harga setelah diskon</span><strong>${money(finalTotal)}</strong></div></article>`;
  }).join('');
 }
@@ -1086,6 +1114,8 @@ function rfRemoveGroupHistory(item,group,entry){
  entry.historyIndex=null;
 }
 $('rfBatchGroups').addEventListener('click',e=>{
+ const addDiscount=e.target.closest('[data-add-batch-discount]');if(addDiscount){const gi=Number(addDiscount.dataset.addBatchDiscount),group=rfCartBatches[gi];if(!group)return;const raw=prompt('Masukkan nominal diskon (Rp):');if(raw===null)return;const amount=safeNumber(String(raw).replace(/[^0-9]/g,''));if(amount<=0){alert('Nominal diskon harus lebih dari 0.');return}if(!Array.isArray(group.discounts))group.discounts=[];group.discounts.push(amount);persistRfCartBatches();renderRfBatchGroups();renderLaba();return}
+ const deleteDiscount=e.target.closest('[data-delete-batch-discount]');if(deleteDiscount){const gi=Number(deleteDiscount.dataset.groupIndex),di=Number(deleteDiscount.dataset.deleteBatchDiscount),group=rfCartBatches[gi];if(!group||!Array.isArray(group.discounts))return;group.discounts.splice(di,1);persistRfCartBatches();renderRfBatchGroups();renderLaba();return}
  const start=e.target.closest('[data-start-batch-qty]');
  if(start){rfBatchQtyEditing.add(rfBatchQtyKey(Number(start.dataset.groupIndex),Number(start.dataset.itemIndex)));renderRfBatchGroups();const key=rfBatchQtyKey(Number(start.dataset.groupIndex),Number(start.dataset.itemIndex));const input=[...$('rfBatchGroups').querySelectorAll('[data-edit-batch-qty]')].find(el=>rfBatchQtyKey(Number(el.dataset.groupIndex),Number(el.dataset.itemIndex))===key);if(input){input.focus();input.select()}return}
  const cancel=e.target.closest('[data-cancel-batch-qty]');
@@ -1109,14 +1139,15 @@ function closeRfBatchDetails(){$('managerTabs').hidden=false;navigate('page3');}
 function updateBatchCartCount(){const kind=activeCategory||'fake';const n=rfDraftCount(kind);const badge=$('batchCartCount');if(badge)badge.textContent=String(n);const btn=$('addBatchCart');if(btn){btn.title=n?`Simpan ${n} item ${kind==='fake'?'Fake':'Asli'} ke keranjang`:'Masukkan semua item ke keranjang';btn.setAttribute('aria-label',btn.title)}}
 function commitRfCartBatch(){
  const kind=activeCategory||'fake',draft=rfCartDraft[kind],entries=[];
- for(const [id,v] of Object.entries(draft)){
+ const draftIds=[...(rfDraftInputOrder[kind]||[]),...Object.keys(draft).filter(id=>!(rfDraftInputOrder[kind]||[]).includes(id))];
+ for(const id of draftIds){const v=draft[id]||{};
   const item=data.find(x=>x.id===id);if(!item)continue;
   const carton=safeNumber(v.carton),loose=safeNumber(v.loose);if(carton<=0&&loose<=0)continue;
   if(carton>0&&safeNumber(item.cartonSize)<1){alert(`Isi per karton untuk "${item.name}" belum diatur di Slide 1.`);return}
   const requested=carton*safeNumber(item.cartonSize)+loose;if(requested>0)entries.push({item,requested});
  }
  if(!entries.length){alert('Isi jumlah pada satu atau beberapa item terlebih dahulu, lalu tekan keranjang.');return}
- const mode=$('cartModeGlobal')?.value||'add',isFake=kind==='fake',qtyKey=isFake?'qtyFake':'qtyAsli',historyKey=isFake?'historyFake':'historyAsli';
+ const mode='add',isFake=kind==='fake',qtyKey=isFake?'qtyFake':'qtyAsli',historyKey=isFake?'historyFake':'historyAsli';
  const batch=[];
  entries.forEach(({item,requested})=>{
   const before=safeNumber(item[qtyKey]);const after=mode==='remove'?Math.max(0,before-requested):before+requested;const actual=Math.abs(after-before);if(actual<=0)return;
@@ -1136,7 +1167,7 @@ function commitRfCartBatch(){
  const activeField=document.activeElement;
  const activeItemId=activeField&&activeField.matches('[data-unit-qty]')?activeField.dataset.id:null;
  const activeUnit=activeField&&activeField.matches('[data-unit-qty]')?activeField.dataset.unitQty:null;
- Object.keys(draft).forEach(id=>delete draft[id]);
+ Object.keys(draft).forEach(id=>delete draft[id]);rfDraftInputOrder[kind]=[];
  persist();renderAll();renderRfCartDetail();renderLaba();renderRfDiscountPending();updateBatchCartCount();
  // Pertahankan keyboard numeric bila memungkinkan; jika item aktif tidak lagi tampil, fokuskan pencarian.
  const nextField=activeItemId&&activeUnit?document.getElementById(`qty-${activeUnit}-${activeItemId}`):null;
@@ -1146,7 +1177,19 @@ function commitRfCartBatch(){
 }
 $('addBatchCart').addEventListener('pointerdown',e=>e.preventDefault());
 $('addBatchCart').addEventListener('mousedown',e=>e.preventDefault());
-$('addBatchCart').addEventListener('click',commitRfCartBatch);
+function openRfCartPreview(){
+ const kind=activeCategory||'fake',draft=rfCartDraft[kind],entries=[];
+ for(const [id,v] of Object.entries(draft)){const item=data.find(x=>x.id===id);if(!item)continue;const carton=safeNumber(v.carton),loose=safeNumber(v.loose);if(carton<=0&&loose<=0)continue;if(carton>0&&safeNumber(item.cartonSize)<1){alert(`Isi per karton untuk "${item.name}" belum diatur di Slide 1.`);return}const qty=carton*safeNumber(item.cartonSize)+loose;if(qty>0)entries.push({item,qty,total:qty*safeNumber(item.price)})}
+ if(!entries.length){alert('Isi jumlah pada satu atau beberapa item terlebih dahulu, lalu tekan keranjang.');return}
+ const name=String($('rfBatchNameInput')?.value||'').trim()||'Input baru';$('rfCartPreviewTitle').textContent=`Pratinjau ${name} · ${kind==='fake'?'Fake':'Asli'}`;
+ const subtotal=entries.reduce((a,x)=>a+x.total,0),discounts=Array.isArray(rfDiscountPending[kind])?rfDiscountPending[kind]:[],discountTotal=discounts.reduce((a,x)=>a+safeNumber(x),0);$('rfCartPreviewBody').innerHTML=entries.map(x=>`<div class="rf-discount-modal-row"><span>${esc(x.item.name)} <small>(${formatQty(x.qty,x.item.cartonSize)})</small></span><strong>${money(x.total)}</strong></div>`).join('')+`<div class="rf-preview-subtotal"><span>Subtotal</span><strong>${money(subtotal)}</strong></div>`+discounts.map((v,i)=>`<div class="rf-preview-discount"><span>Diskon ${i+1}</span><strong>− ${money(safeNumber(v))}</strong></div>`).join('');
+ $('rfCartPreviewTotal').textContent=money(Math.max(0,subtotal-discountTotal));$('rfCartPreview').hidden=false;
+}
+function closeRfCartPreview(){$('rfCartPreview').hidden=true}
+$('addBatchCart').addEventListener('click',openRfCartPreview);
+$('rfCartPreviewClose').addEventListener('click',closeRfCartPreview);$('rfCartPreviewCancel').addEventListener('click',closeRfCartPreview);
+$('rfCartPreview').addEventListener('click',e=>{if(e.target===$('rfCartPreview'))closeRfCartPreview()});
+$('rfCartPreviewConfirm').addEventListener('click',()=>{closeRfCartPreview();commitRfCartBatch()});
 const RF_DISCOUNT_DRAFT_KEY='rfDiscountPending_v2';
 const RF_DISCOUNT_LAST_KEY='rfDiscountLast_v1';
 const rfDiscountPending={fake:[],asli:[]};
@@ -1197,7 +1240,7 @@ function renderSearchCategory(kind){
    return `<div class="result-item" data-result-id="${esc(x.id)}"><div class="result-item-heading"><div class="result-item-title"><div class="result-name-line"><div class="name">${esc(x.name)}</div><span class="item-inline-feedback" id="itemStatus-${esc(x.id)}-${kind}" aria-live="polite"></span></div><div class="price">${money(x.price)} / item</div></div></div><div class="unit-grid">${units.map(u=>`<div class="unit-box"><label for="qty-${u.key}-${esc(x.id)}">${u.label}</label><input class="number-input unit-input" id="qty-${u.key}-${esc(x.id)}" type="number" min="0" step="1" value="${esc(rfDraftFor(kind,x.id)[u.key]??'')}" placeholder="" inputmode="numeric" aria-label="Jumlah ${u.label} untuk ${esc(x.name)}" data-unit-qty="${u.key}" data-id="${esc(x.id)}" data-kind="${kind}" data-multiplier="${u.multiplier}" ${u.key==='carton'&&!cartonReady?'disabled':''}><div class="unit-controls"><button class="qty-btn" type="button" data-unit-step="-1" aria-label="Kurangi ${u.label}" ${u.key==='carton'&&!cartonReady?'disabled':''}>−</button><button class="qty-btn" type="button" data-unit-step="1" aria-label="Tambah ${u.label}" ${u.key==='carton'&&!cartonReady?'disabled':''}>＋</button></div><div class="unit-help">${u.help}</div></div>`).join('')}</div></div>`;
  }).join('');
  host.querySelectorAll('[data-unit-qty]').forEach(inp=>{
-   inp.addEventListener('input',()=>{if(inp.value!==''&&Number(inp.value)<0)inp.value='0';rfDraftFor(inp.dataset.kind,inp.dataset.id)[inp.dataset.unitQty]=inp.value;updateBatchCartCount();});
+   inp.addEventListener('input',()=>{if(inp.value!==''&&Number(inp.value)<0)inp.value='0';const k=inp.dataset.kind,id=inp.dataset.id,d=rfDraftFor(k,id);d[inp.dataset.unitQty]=inp.value;const hasQty=safeNumber(d.carton)>0||safeNumber(d.loose)>0,order=rfDraftInputOrder[k];if(hasQty&&!order.includes(id))order.push(id);if(!hasQty){const at=order.indexOf(id);if(at>=0)order.splice(at,1)}updateBatchCartCount();});
    inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();commitRfCartBatch();}});
  });
  host.querySelectorAll('[data-unit-step]').forEach(button=>{const box=button.closest('.unit-box'),inp=box?.querySelector('[data-unit-qty]');button.addEventListener('pointerdown',e=>{if(inp&&!inp.disabled){e.preventDefault();inp.focus({preventScroll:true});}});button.addEventListener('click',()=>{const row=button.closest('.unit-box'),field=row?.querySelector('[data-unit-qty]');if(!field||field.disabled)return;const step=Number(button.dataset.unitStep)||0;field.value=String(Math.max(0,(Number(field.value)||0)+step));field.dispatchEvent(new Event('input',{bubbles:true}));field.focus({preventScroll:true});});});
@@ -1276,77 +1319,42 @@ function renderLaba(){
  renderKind('fake','labaFakeColumns','labaFakeTotal');renderKind('asli','labaAsliColumns','labaAsliTotal');
 }
 
-const CEK_STORAGE_KEY='cekItemQty_v1';
-const CEK_ORDER_KEY='cekItemOrder_v1';
-let cekItemQty={},cekItemOrder=[];
-try{const savedOrder=JSON.parse(localStorage.getItem(CEK_ORDER_KEY)||'[]');cekItemOrder=Array.isArray(savedOrder)?savedOrder:[]}catch(_){cekItemOrder=[]}
-function persistCekItemOrder(){try{localStorage.setItem(CEK_ORDER_KEY,JSON.stringify(cekItemOrder))}catch(_){}}
-function loadCekItemQty(){try{const saved=JSON.parse(localStorage.getItem(CEK_STORAGE_KEY)||'{}');cekItemQty=saved&&typeof saved==='object'&&!Array.isArray(saved)?saved:{}}catch(_){cekItemQty={}};Object.keys(cekItemQty).forEach(id=>{if(!cekItemOrder.includes(id))cekItemOrder.push(id)});persistCekItemOrder()}
-function persistCekItemQty(){try{localStorage.setItem(CEK_STORAGE_KEY,JSON.stringify(cekItemQty))}catch(e){console.warn('Data Cek Item tidak dapat disimpan',e)}}
+const CEK_STORAGE_KEY='cekItemQty_v1',CEK_ORDER_KEY='cekItemOrder_v1',CEK_INVOICES_KEY='cekInvoices_v2';
+let cekInvoices=[],activeCekInvoiceId='';
+function makeCekInvoice(name){return {id:makeId(),name:String(name||'').trim()||`Faktur ${cekInvoices.length+1}`,items:[]}}
+function activeCekInvoice(){return cekInvoices.find(x=>x.id===activeCekInvoiceId)||cekInvoices[0]}
+function persistCekInvoices(){try{localStorage.setItem(CEK_INVOICES_KEY,JSON.stringify(cekInvoices));localStorage.setItem('cekActiveInvoice_v2',activeCekInvoiceId)}catch(e){console.warn('Faktur Cek Item tidak dapat disimpan',e)}}
+function loadCekInvoices(){try{const saved=JSON.parse(localStorage.getItem(CEK_INVOICES_KEY)||'null');if(Array.isArray(saved)&&saved.length){cekInvoices=saved.map(inv=>({id:String(inv.id||makeId()),name:String(inv.name||'Faktur'),items:Array.isArray(inv.items)?inv.items.map(it=>({id:String(it.id),qty:safeNumber(it.qty)})).filter(it=>it.qty>0):[]}));activeCekInvoiceId=localStorage.getItem('cekActiveInvoice_v2')||cekInvoices[0].id;if(!cekInvoices.some(x=>x.id===activeCekInvoiceId))activeCekInvoiceId=cekInvoices[0].id;return}}catch(_){}let legacy={},order=[];try{legacy=JSON.parse(localStorage.getItem(CEK_STORAGE_KEY)||'{}')||{};order=JSON.parse(localStorage.getItem(CEK_ORDER_KEY)||'[]')||[]}catch(_){}const first=makeCekInvoice('Faktur 1'),ids=[...order,...Object.keys(legacy)].filter((id,i,a)=>a.indexOf(id)===i);first.items=ids.map(id=>({id,qty:safeNumber(legacy[id])})).filter(x=>x.qty>0);cekInvoices=[first];activeCekInvoiceId=first.id;persistCekInvoices()}
+function addCekQty(id,qty){const inv=activeCekInvoice();if(!inv)return;let row=inv.items.find(x=>x.id===id);if(!row){row={id,qty:0};inv.items.push(row)}row.qty+=qty;persistCekInvoices()}
 function renderCekSearch(){
- const input=$('cekSearch'),host=$('cekSearchResults');if(!input||!host)return;
- const query=input.value.trim().toLocaleLowerCase();
- if(!query){host.hidden=true;host.innerHTML='';return}
- const cekOrderIndex=new Map((Array.isArray(cekItemOrder)?cekItemOrder:[]).map((id,i)=>[id,i]));const rows=data.filter(x=>x.name.toLocaleLowerCase().includes(query)).sort((a,b)=>{const ai=cekOrderIndex.has(a.id)?cekOrderIndex.get(a.id):Number.MAX_SAFE_INTEGER,bi=cekOrderIndex.has(b.id)?cekOrderIndex.get(b.id):Number.MAX_SAFE_INTEGER;return ai-bi||data.indexOf(a)-data.indexOf(b)});host.hidden=false;
- host.innerHTML=rows.length?rows.map(x=>{
-  const cartonReady=Number(x.cartonSize)>0;
-  const units=[{key:'carton',label:'Karton',multiplier:cartonReady?Number(x.cartonSize):0,help:cartonReady?`${integer(x.cartonSize)} item/karton`:'Atur di Slide 1'},{key:'loose',label:'Satuan',multiplier:1,help:'1 item'}];
-  return `<div class="result-item" data-cek-result-id="${esc(x.id)}"><div class="result-item-heading"><div class="result-item-title"><div class="result-name-line"><div class="name">${esc(x.name)}</div><span class="item-inline-feedback" id="cekItemStatus-${esc(x.id)}" aria-live="polite"></span></div><div class="price">${money(x.price)} / item</div></div></div><div class="unit-grid">${units.map(u=>`<div class="unit-box"><label for="cek-qty-${u.key}-${esc(x.id)}">${u.label}</label><input class="number-input unit-input" id="cek-qty-${u.key}-${esc(x.id)}" type="number" min="0" step="1" value="" placeholder="" inputmode="numeric" aria-label="Jumlah ${u.label} untuk ${esc(x.name)}" data-cek-unit="${u.key}" data-id="${esc(x.id)}" data-multiplier="${u.multiplier}" ${u.key==='carton'&&!cartonReady?'disabled':''}><div class="unit-controls"><button class="qty-btn" type="button" data-cek-step="-1" aria-label="Kurangi ${u.label}" ${u.key==='carton'&&!cartonReady?'disabled':''}>−</button><button class="qty-btn" type="button" data-cek-step="1" aria-label="Tambah ${u.label}" ${u.key==='carton'&&!cartonReady?'disabled':''}>＋</button></div><div class="unit-help">${u.help}</div></div>`).join('')}<div class="cart-slot"><button class="cart-action cart-icon-only" type="button" data-cek-add="${esc(x.id)}" aria-label="Simpan jumlah ${esc(x.name)} ke Cek Item" title="Simpan ke Cek Item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg></button></div></div></div>`;
- }).join(''):'<div class="empty">Item tidak ditemukan.</div>';
- host.querySelectorAll('[data-cek-add]').forEach(button=>{
-  // Pertahankan fokus kolom angka supaya keyboard tidak menutup saat keranjang ditekan.
-  button.addEventListener('pointerdown',e=>e.preventDefault());
-  button.addEventListener('mousedown',e=>e.preventDefault());
-  button.addEventListener('click',()=>{
-  const row=button.closest('.result-item'),id=button.dataset.cekAdd;let total=0,hasInvalidCarton=false;
-  row.querySelectorAll('[data-cek-unit]').forEach(inp=>{const amount=safeNumber(inp.value),multiplier=Number(inp.dataset.multiplier)||0;if(amount>0&&multiplier<1)hasInvalidCarton=true;total+=amount*multiplier});
-  if(hasInvalidCarton){alert('Atur isi per karton terlebih dahulu di Slide 1.');return}
-  if(total<1){alert('Isi jumlah Karton atau Satuan terlebih dahulu.');row.querySelector('[data-cek-unit]:not(:disabled)')?.focus();return}
-  if(!cekItemOrder.includes(id))cekItemOrder.push(id);persistCekItemOrder();cekItemQty[id]=safeNumber(cekItemQty[id])+total;persistCekItemQty();renderCekItems();
-  row.querySelectorAll('[data-cek-unit]').forEach(inp=>inp.value='');
-  const item=data.find(x=>x.id===id),status=$('cekItemStatus-'+id);
-  if(status)status.textContent=`✓ +${formatQty(total,item?.cartonSize)}`;
-  button.title='Tersimpan!';
-  });
- });
- host.querySelectorAll('[data-cek-step]').forEach(button=>{
-  const getField=()=>button.closest('.unit-box')?.querySelector('[data-cek-unit]');
-  // Jangan biarkan tombol +/− mengambil fokus dari input: ini mencegah keyboard HP menutup.
-  button.setAttribute('tabindex','-1');
-  const keepInputFocused=e=>{const field=getField();if(field&&!field.disabled){e.preventDefault();}};
-  button.addEventListener('pointerdown',keepInputFocused);
-  button.addEventListener('mousedown',keepInputFocused);
-  button.addEventListener('click',e=>{
-   const field=getField();if(!field||field.disabled)return;
-   e.preventDefault();
-   field.value=String(Math.max(0,(Number(field.value)||0)+(Number(button.dataset.cekStep)||0)));
-   field.dispatchEvent(new Event('input',{bubbles:true}));
-   // Fokus tetap pada kolom angka; tidak memaksa scroll halaman.
-   try{field.focus({preventScroll:true})}catch(_){field.focus()}
-  });
- });
- host.querySelectorAll('[data-cek-unit]').forEach(inp=>{
-  inp.addEventListener('input',()=>{if(inp.value!==''&&Number(inp.value)<0)inp.value='0'});
-  inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();inp.closest('.result-item')?.querySelector('[data-cek-add]')?.click()}});
- });
+ const input=$('cekSearch'),host=$('cekSearchResults');if(!input||!host)return;const query=input.value.trim().toLocaleLowerCase();if(!query){host.hidden=true;host.innerHTML='';return}
+ const order=activeCekInvoice()?.items||[],orderIndex=new Map(order.map((it,i)=>[it.id,i]));const rows=data.filter(x=>x.name.toLocaleLowerCase().includes(query)).sort((a,b)=>{const ai=orderIndex.has(a.id)?orderIndex.get(a.id):Number.MAX_SAFE_INTEGER,bi=orderIndex.has(b.id)?orderIndex.get(b.id):Number.MAX_SAFE_INTEGER;return ai-bi||data.indexOf(a)-data.indexOf(b)});host.hidden=false;
+ host.innerHTML=rows.length?rows.map(x=>{const ready=Number(x.cartonSize)>0,units=[{key:'carton',label:'Karton',multiplier:ready?Number(x.cartonSize):0,help:ready?`${integer(x.cartonSize)} item/karton`:'Atur di Slide 1'},{key:'loose',label:'Satuan',multiplier:1,help:'1 item'}];return `<div class="result-item"><div class="result-item-heading"><div class="result-item-title"><div class="result-name-line"><div class="name">${esc(x.name)}</div><span class="item-inline-feedback" id="cekItemStatus-${esc(x.id)}"></span></div><div class="price">${money(x.price)} / item</div></div></div><div class="unit-grid">${units.map(u=>`<div class="unit-box"><label>${u.label}</label><input class="number-input unit-input" type="number" min="0" step="1" value="" inputmode="numeric" data-cek-unit="${u.key}" data-id="${esc(x.id)}" data-multiplier="${u.multiplier}" ${u.key==='carton'&&!ready?'disabled':''}><div class="unit-controls"><button class="qty-btn" type="button" data-cek-step="-1" ${u.key==='carton'&&!ready?'disabled':''}>−</button><button class="qty-btn" type="button" data-cek-step="1" ${u.key==='carton'&&!ready?'disabled':''}>＋</button></div><div class="unit-help">${u.help}</div></div>`).join('')}<div class="cart-slot"><button class="cart-action cart-icon-only" type="button" data-cek-add="${esc(x.id)}" title="Simpan ke faktur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg></button></div></div></div>`}).join(''):'<div class="empty">Item tidak ditemukan.</div>';
+ host.querySelectorAll('[data-cek-add]').forEach(b=>{b.addEventListener('pointerdown',e=>e.preventDefault());b.addEventListener('mousedown',e=>e.preventDefault());b.addEventListener('click',()=>{const row=b.closest('.result-item'),id=b.dataset.cekAdd;let total=0,invalid=false;row.querySelectorAll('[data-cek-unit]').forEach(inp=>{const n=safeNumber(inp.value),m=Number(inp.dataset.multiplier)||0;if(n>0&&m<1)invalid=true;total+=n*m});if(invalid){alert('Atur isi per karton terlebih dahulu di Slide 1.');return}if(total<1){alert('Isi jumlah Karton atau Satuan terlebih dahulu.');return}const item=data.find(x=>x.id===id);const invoiceName=String($('cekInvoiceName')?.value||'').trim()||`Faktur ${cekInvoices.length+1}`;const invoice=makeCekInvoice(invoiceName);invoice.items=[{id,qty:total}];cekInvoices.push(invoice);activeCekInvoiceId=invoice.id;if($('cekInvoiceName'))$('cekInvoiceName').value='';persistCekInvoices();renderCekItems();renderCekSearch();const status=$('cekItemStatus-'+id);if(status)status.textContent=`✓ ${invoice.name}`})});
+ host.querySelectorAll('[data-cek-step]').forEach(b=>{const field=()=>b.closest('.unit-box')?.querySelector('[data-cek-unit]');b.tabIndex=-1;b.addEventListener('pointerdown',e=>{if(field()&&!field().disabled)e.preventDefault()});b.addEventListener('click',e=>{const f=field();if(!f||f.disabled)return;e.preventDefault();f.value=String(Math.max(0,(Number(f.value)||0)+Number(b.dataset.cekStep)));f.focus({preventScroll:true})})});
+ host.querySelectorAll('[data-cek-unit]').forEach(inp=>inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();inp.closest('.result-item')?.querySelector('[data-cek-add]')?.click()}}));
 }
-function renderCekItems(){
- const host=$('cekItemList');if(!host)return;
- const orderIndex=new Map(cekItemOrder.map((id,i)=>[id,i]));const rows=data.filter(x=>safeNumber(cekItemQty[x.id])>0).sort((a,b)=>{const ai=orderIndex.has(a.id)?orderIndex.get(a.id):Number.MAX_SAFE_INTEGER,bi=orderIndex.has(b.id)?orderIndex.get(b.id):Number.MAX_SAFE_INTEGER;return ai-bi});
- host.innerHTML=rows.length?rows.map(x=>{const qty=safeNumber(cekItemQty[x.id]),total=qty*(Number(x.price)||0);return `<div class="cek-row"><div class="cek-row-name"><div class="cek-item-name">${esc(x.name)}</div><button type="button" class="laba-remove" data-cek-remove="${esc(x.id)}" aria-label="Hapus jumlah ${esc(x.name)}" title="Hapus dari Cek Item">×</button></div><div class="cek-stat"><div class="cek-stat-label">Harga Satuan</div><div class="cek-stat-value">${money(x.price)}</div></div><div class="cek-stat"><div class="cek-stat-label">Qty</div><div class="cek-stat-value">${formatQty(qty,x.cartonSize)}</div></div><div class="cek-stat"><div class="cek-stat-label">Harga Total</div><div class="cek-item-total cek-stat-value">${money(total)}</div></div></div>`}).join(''):'<div class="empty" style="padding:22px 10px">Belum ada item yang diinput. Cari nama item di kolom atas, isi jumlah, lalu tekan ikon keranjang.</div>';
- host.querySelectorAll('[data-cek-remove]').forEach(b=>b.addEventListener('click',()=>{delete cekItemQty[b.dataset.cekRemove];cekItemOrder=cekItemOrder.filter(id=>id!==b.dataset.cekRemove);persistCekItemOrder();persistCekItemQty();renderCekItems()}));
- $('cekTotalPrice').textContent=money(rows.reduce((sum,x)=>sum+safeNumber(cekItemQty[x.id])*(Number(x.price)||0),0));
+function renderCekInvoices(){const host=$('cekInvoiceList');if(!host)return;host.innerHTML=cekInvoices.map(inv=>`<div class="cek-row cek-invoice-simple"><button type="button" class="cek-invoice-name ${inv.id===activeCekInvoiceId?'active':''}" data-cek-select-invoice="${esc(inv.id)}" title="Klik untuk memilih, klik dua kali untuk mengubah nama"><span class="cek-invoice-prefix">Faktur</span><strong>${esc(inv.name)}</strong></button><button type="button" class="laba-remove" data-cek-delete-invoice="${esc(inv.id)}" aria-label="Hapus faktur">×</button></div>`).join('');
+ host.querySelectorAll('[data-cek-select-invoice]').forEach(b=>b.addEventListener('click',()=>{const inv=cekInvoices.find(x=>x.id===b.dataset.cekSelectInvoice);if(!inv)return;activeCekInvoiceId=inv.id;const name=prompt('Ubah nama faktur:',inv.name);if(name!==null&&name.trim())inv.name=name.trim();persistCekInvoices();renderCekItems();renderCekSearch()}));
+ host.querySelectorAll('[data-cek-delete-invoice]').forEach(b=>b.addEventListener('click',()=>{if(cekInvoices.length===1){alert('Minimal harus ada satu faktur.');return}const inv=cekInvoices.find(x=>x.id===b.dataset.cekDeleteInvoice);if(!inv||!confirm(`Hapus ${inv.name}?`))return;cekInvoices=cekInvoices.filter(x=>x.id!==inv.id);if(activeCekInvoiceId===inv.id)activeCekInvoiceId=cekInvoices[0].id;persistCekInvoices();renderCekItems();renderCekSearch()}));
+}
+function renderCekItems(){const host=$('cekItemList');if(!host)return;const inv=activeCekInvoice(),rows=(inv?.items||[]).map(it=>({item:data.find(x=>x.id===it.id),qty:safeNumber(it.qty)})).filter(x=>x.item&&x.qty>0);
+ host.innerHTML=rows.length?rows.map(({item:x,qty})=>`<div class="cek-row"><div class="cek-row-name"><div class="cek-item-name">${esc(x.name)}</div><button type="button" class="laba-remove" data-cek-remove="${esc(x.id)}">×</button></div><div class="cek-stat"><div class="cek-stat-label">Harga Satuan</div><div class="cek-stat-value">${money(x.price)}</div></div><div class="cek-stat"><div class="cek-stat-label">Qty</div><div class="cek-stat-value">${formatQty(qty,x.cartonSize)}</div></div><div class="cek-stat"><div class="cek-stat-label">Harga Total</div><div class="cek-item-total cek-stat-value">${money(qty*(Number(x.price)||0))}</div></div></div>`).join(''):'<div class="empty" style="padding:22px 10px">Belum ada item di faktur ini. Cari nama item, isi jumlah, lalu tekan ikon keranjang.</div>';
+ host.querySelectorAll('[data-cek-remove]').forEach(b=>b.addEventListener('click',()=>{const inv=activeCekInvoice();if(inv){inv.items=inv.items.filter(x=>x.id!==b.dataset.cekRemove);persistCekInvoices();renderCekItems();renderCekSearch()}}));
+ $('cekTotalPrice').textContent=money(rows.reduce((sum,x)=>sum+x.qty*(Number(x.item.price)||0),0));$('cekActiveInvoiceLabel').textContent='Faktur aktif: '+(inv?.name||'');renderCekInvoices();
 }
 $('cekSearch').addEventListener('input',renderCekSearch);
 $('cekSearchClear').addEventListener('click',()=>{$('cekSearch').value='';renderCekSearch();$('cekSearch').focus()});
-$('cleanCekBtn').addEventListener('click',()=>{if(!Object.values(cekItemQty).some(v=>safeNumber(v)>0)){alert('Daftar Cek Item sudah kosong.');return}if(!confirm('Hapus semua jumlah yang tersimpan di Cek Item?'))return;cekItemQty={};cekItemOrder=[];persistCekItemOrder();persistCekItemQty();renderCekItems();renderCekSearch()});
+$('cleanCekBtn').addEventListener('click',()=>{if(!cekInvoices.some(inv=>inv.items.length)){alert('Semua faktur sudah kosong.');return}if(!confirm('Hapus semua jumlah dari seluruh faktur Cek Item?'))return;cekInvoices.forEach(inv=>inv.items=[]);persistCekInvoices();renderCekItems();renderCekSearch()});
+$('cekAddInvoice').addEventListener('click',()=>{const inv=makeCekInvoice($('cekInvoiceName').value.trim()||`Faktur ${cekInvoices.length+1}`);cekInvoices.push(inv);activeCekInvoiceId=inv.id;$('cekInvoiceName').value='';persistCekInvoices();renderCekItems();renderCekSearch()});
+$('setupSearch').addEventListener('input',renderSetup);
 function renderAll(){renderSetup();renderSummary();renderSearch();renderCekSearch();renderCekItems()}
 $('exportBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({app:'Data Manager Fake & Asli',version:1,exportedAt:new Date().toISOString(),items:data},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='cadangan-data-fake-asli.json';a.click();URL.revokeObjectURL(url)});
 $('importBtn').addEventListener('click',()=>$('importFile').click());
 $('importFile').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;try{const parsed=JSON.parse(await file.text());const items=Array.isArray(parsed)?parsed:parsed.items;if(!Array.isArray(items))throw new Error('Format tidak sesuai');const cleaned=items.map(x=>({id:String(x.id||makeId()),name:String(x.name||'').trim(),price:safeNumber(x.price!==undefined?x.price:(x.priceFake??x.priceAsli??0)),priceFake:safeNumber(x.price!==undefined?x.price:(x.priceFake??x.priceAsli??0)),priceAsli:safeNumber(x.price!==undefined?x.price:(x.priceFake??x.priceAsli??0)),cartonSize:safeNumber(x.cartonSize),qtyFake:safeNumber(x.qtyFake),qtyAsli:safeNumber(x.qtyAsli),historyFake:Array.isArray(x.historyFake)?x.historyFake:[],historyAsli:Array.isArray(x.historyAsli)?x.historyAsli:[]})).filter(x=>x.name);if(!confirm(`Impor ${cleaned.length} item? Data yang ada saat ini akan diganti.`))return;const names=new Set();for(const x of cleaned){const k=x.name.toLocaleLowerCase();if(names.has(k))throw new Error('Ada nama item duplikat di file');names.add(k)}data=cleaned;persist();resetForm();inlineEditingId=null;renderAll();alert('Impor berhasil.');}catch(err){alert('File cadangan tidak valid: '+err.message)}finally{e.target.value=''}});
-$('clearQtyBtn').addEventListener('click',()=>{const hasQty=data.some(x=>x.qtyFake||x.qtyAsli);const hasBatches=Array.isArray(rfCartBatches)&&rfCartBatches.length>0;if(!hasQty&&!hasBatches){alert('Semua Qty dan Rincian sudah kosong.');return}if(!confirm('Kosongkan semua Qty Fake dan Asli menjadi 0 serta hapus seluruh Rincian kelompok? Data item dan harga tetap tersimpan.'))return;data.forEach(x=>{x.qtyFake=0;x.qtyAsli=0;x.historyFake=[];x.historyAsli=[]});rfCartBatches=[];persistRfCartBatches();Object.keys(rfCartDraft.fake).forEach(id=>delete rfCartDraft.fake[id]);Object.keys(rfCartDraft.asli).forEach(id=>delete rfCartDraft.asli[id]);persist();renderAll();renderRfCartDetail();updateBatchCartCount()});
+$('clearQtyBtn').addEventListener('click',()=>{const hasQty=data.some(x=>x.qtyFake||x.qtyAsli);const hasBatches=Array.isArray(rfCartBatches)&&rfCartBatches.length>0;if(!hasQty&&!hasBatches){alert('Semua Qty dan Rincian sudah kosong.');return}if(!confirm('Kosongkan semua Qty Fake dan Asli menjadi 0 serta hapus seluruh Rincian kelompok? Data item dan harga tetap tersimpan.'))return;data.forEach(x=>{x.qtyFake=0;x.qtyAsli=0;x.historyFake=[];x.historyAsli=[]});rfCartBatches=[];persistRfCartBatches();Object.keys(rfCartDraft.fake).forEach(id=>delete rfCartDraft.fake[id]);Object.keys(rfCartDraft.asli).forEach(id=>delete rfCartDraft.asli[id]);rfDraftInputOrder.fake=[];rfDraftInputOrder.asli=[];persist();renderAll();renderRfCartDetail();updateBatchCartCount()});
 $('clearAllBtn').addEventListener('click',()=>{if(!data.length){alert('Belum ada data untuk dihapus.');return}if(!confirm('Hapus SEMUA item dan seluruh jumlahnya? Tindakan ini tidak dapat dibatalkan. Sebaiknya ekspor cadangan dahulu.'))return;data=[];persist();resetForm();inlineEditingId=null;renderAll()});
-load();loadCekItemQty();renderAll();renderRfDiscountLastInputs();renderRfDiscountPending();renderLaba();renderCekSearch();
+load();loadCekInvoices();renderAll();renderRfDiscountLastInputs();renderRfDiscountPending();renderLaba();renderCekSearch();
 })();
 </script>
 
